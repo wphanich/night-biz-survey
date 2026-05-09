@@ -1,1 +1,2 @@
-
+const SUPABASE_URL = 'https://vyidmbmukasbftaresxt.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5aWRtYm11a2FzYmZ0YXJlc3h0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2OTk3NjAsImV4cCI6MjA5MTI3NTc2MH0.VyEwk8xatE-Fs0cleRZZt2WqX6ERL9SsMJ7QRJ29xag';
