@@ -23,7 +23,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:var(--text);line-height:1.6}
-
+ 
 /* ── LOGIN ── */
 .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f2540,#1a3a5c,#1e4a72);padding:1rem}
 .login-card{background:var(--surface);border-radius:var(--radius-lg);padding:2.5rem 2rem;width:100%;max-width:400px;box-shadow:var(--shadow-md)}
@@ -32,7 +32,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .login-logo h1{font-size:17px;font-weight:600;color:var(--primary)}
 .login-logo p{font-size:13px;color:var(--text-muted);margin-top:4px}
 .login-divider{height:3px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:2px;margin-bottom:1.75rem}
-
+ 
 /* ── SHARED ── */
 .form-group{margin-bottom:1rem}
 .form-group label{display:block;font-size:13px;font-weight:500;color:var(--text-muted);margin-bottom:5px}
@@ -48,7 +48,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .btn-full{width:100%}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .required{color:var(--danger)}
-
+ 
 /* ── APP SHELL ── */
 .app{display:none;min-height:100vh}
 .topbar{background:var(--primary);color:#fff;padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
@@ -65,7 +65,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .tab-btn:hover:not(.active){color:var(--text)}
 .main-content{max-width:1100px;margin:0 auto;padding:1.5rem}
 .panel{display:none}.panel.active{display:block}
-
+ 
 /* ── CARDS / FORMS ── */
 .card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);padding:1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
 .card-title{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.25rem;padding-bottom:10px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:8px}
@@ -81,14 +81,14 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .tax-year-label{font-size:12px;font-weight:600;color:var(--primary);margin-bottom:10px}
 .tax-year-box .form-group{margin-bottom:8px}
 .actions{display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap}
-
+ 
 /* ── ALERTS ── */
 .alert{padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;animation:slideIn .2s ease}
 @keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .alert-success{background:var(--success-light);color:var(--success);border:1px solid #b6e0c6}
 .alert-error{background:var(--danger-light);color:var(--danger);border:1px solid #f5c4be}
 .alert-warning{background:var(--warning-light);color:var(--warning);border:1px solid #f5dfa0}
-
+ 
 /* ── LIST PANEL ── */
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
 .stat-box{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:1rem;box-shadow:var(--shadow)}
@@ -119,13 +119,13 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .loading{text-align:center;padding:2rem;color:var(--text-muted);font-size:13px}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
+ 
 /* ── COMPLETED TAB ── */
 .search-box-big{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
 .search-box-big h3{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:.75rem}
 .search-input-row{display:flex;gap:8px;flex-wrap:wrap}
 .search-input-row input{flex:1;min-width:220px}
-
+ 
 /* ── TABLE ── */
 .tbl-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border-light)}
 .work-table{width:100%;border-collapse:collapse;font-size:12px;min-width:1400px}
@@ -140,7 +140,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .work-table .ctr{text-align:center}
 .work-table .tax-col{background:#fffbf0}
 .work-table .total-col{background:var(--success-light);font-weight:600;color:var(--success);text-align:right;font-family:monospace}
-
+ 
 /* ── MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem}
 .modal{background:var(--surface);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow-md)}
@@ -158,11 +158,11 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .tax-input-table td:first-child{font-weight:500;padding-left:10px;white-space:nowrap}
 .tax-input-table input{width:100%;text-align:right;border:1px solid var(--border);border-radius:4px;padding:5px 7px;font-size:13px;font-family:'Sarabun',sans-serif}
 .tax-input-table input:focus{outline:none;border-color:var(--primary)}
-
+ 
 /* ── EXPORT ── */
 .exp-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:13px}
 .exp-row:last-child{border-bottom:none}
-
+ 
 .hidden{display:none!important}
 @media(max-width:640px){
   .form-grid{grid-template-columns:1fr}
@@ -173,7 +173,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 </style>
 </head>
 <body>
-
+ 
 <!-- ════════════════════════════════════════════════
      LOGIN
 ════════════════════════════════════════════════ -->
@@ -198,7 +198,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
     <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:1rem">ติดต่อผู้ดูแลระบบเพื่อขอบัญชีผู้ใช้งาน</p>
   </div>
 </div>
-
+ 
 <!-- ════════════════════════════════════════════════
      APP
 ════════════════════════════════════════════════ -->
@@ -213,20 +213,20 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
       <button class="btn-logout" onclick="doLogout()">ออกจากระบบ</button>
     </div>
   </div>
-
+ 
   <div class="tabs-bar">
     <button class="tab-btn active" onclick="switchTab('input',this)">📋 บันทึกข้อมูล</button>
     <button class="tab-btn" onclick="switchTab('list',this)">📂 รายการทั้งหมด</button>
     <button class="tab-btn" onclick="switchTab('completed',this)">✅ งานที่ทำเสร็จ</button>
     <button class="tab-btn" onclick="switchTab('export',this)">📥 ส่งออก / สรุป</button>
   </div>
-
+ 
   <div class="main-content">
     <div id="appAlert"></div>
-
+ 
     <!-- ══ INPUT ══════════════════════════════════ -->
     <div id="panel-input" class="panel active">
-
+ 
       <div class="card">
         <div class="card-title"><span class="dot"></span>ข้อมูลพื้นฐาน</div>
         <div class="form-grid">
@@ -273,7 +273,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
           </div>
         </div>
       </div>
-
+ 
       <div class="card">
         <div class="card-title"><span class="dot"></span>สถานที่ตั้งกิจการ</div>
         <div class="form-grid">
@@ -285,7 +285,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
           <div class="form-group col-full"><label>หมายเหตุสถานที่</label><input type="text" id="locationNote" placeholder="เช่น ใกล้ BTS..."></div>
         </div>
       </div>
-
+ 
       <div class="card">
         <div class="card-title"><span class="dot"></span>ภาษีมูลค่าเพิ่ม (VAT)</div>
         <div class="form-group">
@@ -307,7 +307,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
           </div>
         </div>
       </div>
-
+ 
       <div class="card">
         <div class="card-title"><span class="dot"></span>ประวัติการเสียภาษีเงินได้</div>
         <div class="form-group" style="margin-bottom:1rem">
@@ -321,7 +321,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
         <div class="card-title" style="margin-top:.5rem"><span class="dot"></span>ข้อมูลย้อนหลัง 3 ปี</div>
         <div class="tax-grid" id="taxYearsContainer"></div>
       </div>
-
+ 
       <div class="card">
         <div class="card-title"><span class="dot"></span>ข้อมูลเจ้าหน้าที่</div>
         <div class="form-grid">
@@ -334,13 +334,13 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
           <div class="form-group col-full"><label>หมายเหตุ / ข้อสังเกต</label><textarea id="remarks" placeholder="บันทึกข้อสังเกตเพิ่มเติม..."></textarea></div>
         </div>
       </div>
-
+ 
       <div class="actions">
         <button class="btn btn-primary" id="saveBtn" onclick="saveRecord()">บันทึกข้อมูล</button>
         <button class="btn btn-outline" onclick="clearForm()">ล้างแบบฟอร์ม</button>
       </div>
     </div>
-
+ 
     <!-- ══ LIST ═══════════════════════════════════ -->
     <div id="panel-list" class="panel">
       <div class="stat-row">
@@ -358,10 +358,10 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
       </div>
       <div id="recordList"><div class="loading">กำลังโหลด...</div></div>
     </div>
-
+ 
     <!-- ══ COMPLETED ══════════════════════════════ -->
     <div id="panel-completed" class="panel">
-
+ 
       <!-- ค้นหา -->
       <div class="search-box-big">
         <h3>🔍 ค้นหาผู้ประกอบการเพื่อบันทึกงานที่ทำเสร็จ</h3>
@@ -373,7 +373,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
         </div>
       </div>
       <div id="compSearchResult"></div>
-
+ 
       <!-- ตารางงานที่ทำเสร็จ -->
       <div class="card">
         <div class="card-title" style="flex-wrap:wrap;gap:8px">
@@ -418,7 +418,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
         </div>
       </div>
     </div>
-
+ 
     <!-- ══ EXPORT ══════════════════════════════════ -->
     <div id="panel-export" class="panel">
       <div class="card">
@@ -435,7 +435,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
     </div>
   </div>
 </div>
-
+ 
 <!-- ════════════════════════════════════════════════
      MODAL — บันทึกงานที่ทำเสร็จ
 ════════════════════════════════════════════════ -->
@@ -445,16 +445,16 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
       <div class="modal-title" id="modalTitle">บันทึกงานที่ทำเสร็จ</div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-
+ 
     <!-- ข้อมูลผู้ประกอบการ -->
     <div class="info-band" id="modalInfoBand"></div>
-
+ 
     <!-- วันที่ -->
     <div class="form-group">
       <label>วันเดือนปีที่ชำระภาษี <span class="required">*</span></label>
       <input type="date" id="cm_payDate" style="max-width:220px">
     </div>
-
+ 
     <!-- ตารางกรอกภาษี -->
     <div style="overflow-x:auto">
       <table class="tax-input-table">
@@ -506,22 +506,22 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
         </tbody>
       </table>
     </div>
-
+ 
     <div class="form-group" style="margin-top:1rem">
       <label>หมายเหตุ</label>
       <textarea id="cm_remarks" placeholder="บันทึกเพิ่มเติม..." style="min-height:60px"></textarea>
     </div>
-
+ 
     <input type="hidden" id="cm_surveyId">
     <input type="hidden" id="cm_editId">
-
+ 
     <div class="actions">
       <button class="btn btn-primary" onclick="saveCompleted()">💾 บันทึกงานที่ทำเสร็จ</button>
       <button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button>
     </div>
   </div>
 </div>
-
+ 
 <!-- ════════════════════════════════════════════════
      SCRIPT
 ════════════════════════════════════════════════ -->
@@ -529,12 +529,12 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 // SUPABASE_URL และ SUPABASE_KEY อยู่ใน config.js
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-
+ 
 let currentUser = null;
 let allRecords   = [];
 let compRecords  = [];
 const TODAY_BE   = new Date().getFullYear() + 543;
-
+ 
 // ── AUTH ──────────────────────────────────────────────────────────────────
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
@@ -565,7 +565,7 @@ function showApp() {
   document.getElementById('userBadge').textContent = currentUser.email;
   initForm(); loadRecords(); loadCompleted();
 }
-
+ 
 // ── FORM HELPERS ──────────────────────────────────────────────────────────
 function initForm() {
   document.getElementById('surveyDate').value = new Date().toISOString().split('T')[0];
@@ -594,7 +594,7 @@ function onVATChange(el) { document.getElementById('vatDetail').classList.toggle
 function onBizTypeChange() { document.getElementById('otherBizGroup').classList.toggle('hidden', document.getElementById('bizType').value !== 'อื่น ๆ'); }
 const gv = id => (document.getElementById(id)||{}).value?.trim() || '';
 const gn = id => parseFloat(gv(id)) || 0;
-
+ 
 function clearForm(keepMsg) {
   ['tin','bizName','bizBrandName','regNumber','address','subdistrict','district','postalCode',
    'locationNote','vatNumber','vatRegDate','vatSales','officerUnit','remarks'].forEach(id => {
@@ -612,7 +612,7 @@ function clearForm(keepMsg) {
   document.getElementById('saveBtn').dataset.editId = '';
   if (!keepMsg) document.getElementById('appAlert').innerHTML = '';
 }
-
+ 
 // ── SAVE SURVEY ───────────────────────────────────────────────────────────
 async function saveRecord() {
   const tin = gv('tin'), name = gv('bizName'), address = gv('address');
@@ -623,7 +623,7 @@ async function saveRecord() {
   if (!gv('bizType') && !gv('otherBizType')) { showAppAlert('กรุณาเลือกประเภทกิจการ','error'); return; }
   if (!address || !sub || !dist) { showAppAlert('กรุณากรอกที่อยู่ให้ครบ','error'); return; }
   if (!vatStatus) { showAppAlert('กรุณาเลือกสถานะ VAT','error'); return; }
-
+ 
   const taxYears = [];
   for (let i = 2; i >= 0; i--) {
     const y = TODAY_BE - i;
@@ -646,11 +646,11 @@ async function saveRecord() {
     risk_level: gv('riskLevel'), remarks: gv('remarks'),
     updated_at: new Date().toISOString()
   };
-
+ 
   const btn = document.getElementById('saveBtn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> กำลังบันทึก...';
   const editId = btn.dataset.editId;
-
+ 
   if (!editId) {
     const { data: dup } = await sb.from('nightbiz_survey').select('id,officer_email').eq('tin', tin);
     if (dup && dup.length > 0) {
@@ -659,17 +659,17 @@ async function saveRecord() {
     }
     payload.created_at = new Date().toISOString(); payload.created_by = currentUser.id;
   }
-
+ 
   const { error } = editId
     ? await sb.from('nightbiz_survey').update(payload).eq('id', editId)
     : await sb.from('nightbiz_survey').insert([payload]);
-
+ 
   btn.disabled = false; btn.textContent = 'บันทึกข้อมูล';
   if (error) { showAppAlert('เกิดข้อผิดพลาด: '+error.message,'error'); return; }
   showAppAlert(editId ? 'อัปเดตเรียบร้อย' : 'บันทึกเรียบร้อย','success');
   clearForm(true); await loadRecords();
 }
-
+ 
 // ── LOAD / RENDER SURVEY LIST ─────────────────────────────────────────────
 async function loadRecords() {
   const { data, error } = await sb.from('nightbiz_survey').select('*').order('created_at', { ascending: false });
@@ -677,7 +677,7 @@ async function loadRecords() {
   allRecords = data || [];
   renderList(); renderSummaries();
 }
-
+ 
 function renderList() {
   const q  = document.getElementById('searchQ')?.value?.toLowerCase() || '';
   const ft = document.getElementById('filterType')?.value || '';
@@ -716,7 +716,7 @@ function renderList() {
       <div class="record-addr">${r.subdistrict||''} ${r.district||''} ${r.province||''}</div>
     </div>`).join('');
 }
-
+ 
 function editRecord(id) {
   const r = allRecords.find(x => x.id === id); if (!r) return;
   switchTab('input', document.querySelectorAll('.tab-btn')[0]);
@@ -749,21 +749,21 @@ function editRecord(id) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 50);
 }
-
+ 
 async function deleteRecord(id, tin) {
   if (!confirm(`ต้องการลบข้อมูลเลขผู้เสียภาษี ${tin} หรือไม่?`)) return;
   const { error } = await sb.from('nightbiz_survey').delete().eq('id', id);
   if (error) { showAppAlert('ลบไม่สำเร็จ: '+error.message,'error'); return; }
   showAppAlert('ลบเรียบร้อย','success'); await loadRecords();
 }
-
+ 
 // ── COMPLETED WORK ────────────────────────────────────────────────────────
 async function loadCompleted() {
   const { data, error } = await sb
     .from('nightbiz_completed')
     .select('*, nightbiz_survey(name, tin, biz_brand_name, type)')
     .order('pay_date', { ascending: false });
-
+ 
   if (error) {
     document.getElementById('compTbody').innerHTML =
       `<tr><td colspan="27" class="empty" style="color:var(--danger)">
@@ -775,11 +775,11 @@ async function loadCompleted() {
   document.getElementById('comp-count').textContent = compRecords.length;
   renderCompTable();
 }
-
+ 
 function renderCompTable() {
   const tbody = document.getElementById('compTbody');
   if (!compRecords.length) { tbody.innerHTML = '<tr><td colspan="27" class="empty">ยังไม่มีรายการงานที่ทำเสร็จ</td></tr>'; return; }
-
+ 
   const fmt = n => n ? Number(n).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—';
   const grandTotal = r => [
     r.pit_tax, r.pit_fine, r.pit_sur, r.pit_pen,
@@ -788,7 +788,7 @@ function renderCompTable() {
     r.sbt_tax, r.sbt_fine, r.sbt_sur, r.sbt_pen,
     r.stm_tax, r.stm_fine, r.stm_sur, r.stm_pen
   ].reduce((a, b) => a + (parseFloat(b) || 0), 0);
-
+ 
   tbody.innerHTML = compRecords.map((r, i) => `
     <tr>
       <td class="ctr">${i+1}</td>
@@ -805,7 +805,7 @@ function renderCompTable() {
       <td class="ctr"><button class="btn btn-danger-soft btn-sm" onclick="deleteCompleted('${r.id}')">ลบ</button></td>
     </tr>`).join('');
 }
-
+ 
 function searchComp() {
   const q  = document.getElementById('compQ').value.toLowerCase().trim();
   const ft = document.getElementById('compFilterType').value;
@@ -834,7 +834,7 @@ function searchComp() {
         </div>
       </div>`).join('') + '</div>';
 }
-
+ 
 function openModal(surveyId, editData = null) {
   const rec = allRecords.find(r => r.id === surveyId); if (!rec) return;
   document.getElementById('modalTitle').textContent = editData ? 'แก้ไขงานที่ทำเสร็จ' : 'บันทึกงานที่ทำเสร็จ';
@@ -852,14 +852,14 @@ function openModal(surveyId, editData = null) {
   fields.forEach(f => { const e = document.getElementById('cm_'+f); if (e) e.value = editData ? (editData[f] || '') : ''; });
   document.getElementById('compModal').classList.remove('hidden');
 }
-
+ 
 function closeModal() { document.getElementById('compModal').classList.add('hidden'); }
-
+ 
 async function saveCompleted() {
   const surveyId = document.getElementById('cm_surveyId').value;
   const payDate  = document.getElementById('cm_payDate').value;
   if (!payDate) { showAppAlert('กรุณาเลือกวันที่ชำระภาษี','error'); return; }
-
+ 
   const payload = {
     survey_id: surveyId, pay_date: payDate,
     pit_tax: gn('cm_pit_tax'), pit_fine: gn('cm_pit_fine'), pit_sur: gn('cm_pit_sur'), pit_pen: gn('cm_pit_pen'),
@@ -882,14 +882,14 @@ async function saveCompleted() {
   showAppAlert('บันทึกงานที่ทำเสร็จเรียบร้อย','success');
   closeModal(); await loadCompleted();
 }
-
+ 
 async function deleteCompleted(id) {
   if (!confirm('ต้องการลบรายการนี้หรือไม่?')) return;
   const { error } = await sb.from('nightbiz_completed').delete().eq('id', id);
   if (error) { showAppAlert('ลบไม่สำเร็จ: '+error.message,'error'); return; }
   showAppAlert('ลบเรียบร้อย','success'); await loadCompleted();
 }
-
+ 
 // ── SUMMARIES ─────────────────────────────────────────────────────────────
 function renderSummaries() {
   const cnt = (arr, key) => arr.reduce((a, r) => { a[r[key]||'ไม่ระบุ'] = (a[r[key]||'ไม่ระบุ']||0)+1; return a; }, {});
@@ -899,7 +899,7 @@ function renderSummaries() {
   document.getElementById('vatSummary').innerHTML  = rows(cnt(allRecords,'vat_status')) || '<p style="font-size:13px;color:var(--text-muted)">ยังไม่มีข้อมูล</p>';
   document.getElementById('riskSummary').innerHTML = rows(cnt(allRecords,'risk_level')) || '<p style="font-size:13px;color:var(--text-muted)">ยังไม่มีข้อมูล</p>';
 }
-
+ 
 // ── EXPORT ────────────────────────────────────────────────────────────────
 function exportSurveyCSV() {
   if (!allRecords.length) { showAppAlert('ไม่มีข้อมูล','error'); return; }
@@ -908,7 +908,7 @@ function exportSurveyCSV() {
     .map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(','));
   dl('nightbiz_survey_'+Date.now()+'.csv', '\uFEFF'+[h.join(','),...rows].join('\n'));
 }
-
+ 
 function exportCompCSV() {
   if (!compRecords.length) { showAppAlert('ยังไม่มีงานที่ทำเสร็จ','error'); return; }
   const h = ['ลำดับ','ชื่อผู้ประกอบการ','เลขประจำตัวผู้เสียภาษี','ชื่อสถานประกอบการ','วันที่ชำระภาษี',
@@ -930,13 +930,13 @@ function exportCompCSV() {
   ].map(v => `"${String(v||'0').replace(/"/g,'""')}"`).join(','));
   dl('nightbiz_completed_'+Date.now()+'.csv', '\uFEFF'+[h.join(','),...rows].join('\n'));
 }
-
+ 
 function dl(name, content) {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8' }));
   a.download = name; a.click();
 }
-
+ 
 // ── UI HELPERS ────────────────────────────────────────────────────────────
 function switchTab(name, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -952,8 +952,9 @@ function showAppAlert(msg, type) {
   a.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
   if (type === 'success') setTimeout(() => a.innerHTML = '', 4000);
 }
-
+ 
 checkSession();
 </script>
 </body>
 </html>
+ 
