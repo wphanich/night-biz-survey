@@ -764,13 +764,6 @@ async function loadCompleted() {
     .select('*, nightbiz_survey(name, tin, biz_brand_name, type)')
     .order('pay_date', { ascending: false });
  
-  if (error) {
-    document.getElementById('compTbody').innerHTML =
-      `<tr><td colspan="27" class="empty" style="color:var(--danger)">
-        ⚠️ ยังไม่มีตาราง nightbiz_completed — กรุณารัน SQL สร้างตารางใน Supabase ก่อน
-      </td></tr>`;
-    return;
-  }
   compRecords = data || [];
   document.getElementById('comp-count').textContent = compRecords.length;
   renderCompTable();
