@@ -378,9 +378,10 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
       <div class="card">
         <div class="card-title" style="flex-wrap:wrap;gap:8px">
           <span class="dot"></span>รายการงานที่ทำเสร็จทั้งหมด
-          <span style="margin-left:auto;display:flex;gap:8px">
+          <span style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn btn-outline btn-sm" onclick="loadCompleted()">🔄 รีเฟรช</button>
             <button class="btn btn-success btn-sm" onclick="exportCompCSV()">📥 Export CSV</button>
+            <button class="btn btn-primary btn-sm" onclick="printCompleted()">🖨️ พิมพ์รายงาน</button>
           </span>
         </div>
         <div style="font-size:12px;color:var(--text-muted);margin-bottom:.75rem">
@@ -764,6 +765,13 @@ async function loadCompleted() {
     .select('*, nightbiz_survey(name, tin, biz_brand_name, type)')
     .order('pay_date', { ascending: false });
  
+  if (error) {
+    document.getElementById('compTbody').innerHTML =
+      `<tr><td colspan="27" class="empty" style="color:var(--danger)">
+        ⚠️ ยังไม่มีตาราง nightbiz_completed — กรุณารัน SQL สร้างตารางใน Supabase ก่อน
+      </td></tr>`;
+    return;
+  }
   compRecords = data || [];
   document.getElementById('comp-count').textContent = compRecords.length;
   renderCompTable();
@@ -930,7 +938,109 @@ function dl(name, content) {
   a.download = name; a.click();
 }
  
-// ── UI HELPERS ────────────────────────────────────────────────────────────
+// ── PRINT ──────────────────────────────────────────────────────────────────
+function printCompleted() {
+  if (!compRecords.length) { showAppAlert('ยังไม่มีงานที่ทำเสร็จ','error'); return; }
+  
+  const fmt = n => n ? Number(n).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—';
+  const grandTotal = r => [
+    r.pit_tax, r.pit_fine, r.pit_sur, r.pit_pen,
+    r.cit_tax, r.cit_fine, r.cit_sur, r.cit_pen,
+    r.vat_tax, r.vat_fine, r.vat_sur, r.vat_pen,
+    r.sbt_tax, r.sbt_fine, r.sbt_sur, r.sbt_pen,
+    r.stm_tax, r.stm_fine, r.stm_sur, r.stm_pen
+  ].reduce((a, b) => a + (parseFloat(b) || 0), 0);
+ 
+  let html = `
+    <!DOCTYPE html>
+    <html lang="th">
+    <head>
+      <meta charset="UTF-8">
+      <title>รายงานงานที่ทำเสร็จ</title>
+      <style>
+        body { font-family: Arial, sans-serif; margin: 20px; font-size: 12px; }
+        h1, h2 { text-align: center; color: #1a3a5c; margin-bottom: 5px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .date { text-align: right; margin-bottom: 15px; font-size: 11px; color: #666; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th { background: #1a3a5c; color: white; padding: 8px; text-align: center; font-weight: bold; font-size: 11px; border: 0.5px solid #333; }
+        td { padding: 6px 8px; border: 0.5px solid #999; }
+        tr:nth-child(even) { background: #f5f5f5; }
+        .right { text-align: right; }
+        .center { text-align: center; }
+        .total { background: #e8f5ee; font-weight: bold; }
+        @media print {
+          body { margin: 0; }
+          .no-print { display: none; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>รายงานงานที่ทำเสร็จ</h1>
+        <h2>โครงการสำรวจธุรกิจประกอบการกลางคืน</h2>
+        <p>สรรพากรพื้นที่กรุงเทพมหานคร 13</p>
+      </div>
+      <div class="date">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</div>
+      <table>
+        <thead>
+          <tr>
+            <th>ลำดับ</th>
+            <th>ชื่อผู้ประกอบการ</th>
+            <th>เลขประจำตัวผู้เสียภาษี</th>
+            <th>ชื่อสถานประกอบการ</th>
+            <th>วันที่ชำระภาษี</th>
+            <th colspan="4">ภษ.บุคคลธรรมดา (บาท)</th>
+            <th colspan="4">ภษ.นิติบุคคล (บาท)</th>
+            <th colspan="4">VAT (บาท)</th>
+            <th colspan="4">ธุรกิจเฉพาะ (บาท)</th>
+            <th colspan="4">อากรแสตมป์ (บาท)</th>
+            <th>รวมทั้งสิ้น (บาท)</th>
+          </tr>
+          <tr>
+            <th colspan="5"></th>
+            <th style="font-size:10px">ภาษี</th><th style="font-size:10px">เบี้ยปรับ</th><th style="font-size:10px">เงินเพิ่ม</th><th style="font-size:10px">ค่าปรับ</th>
+            <th style="font-size:10px">ภาษี</th><th style="font-size:10px">เบี้ยปรับ</th><th style="font-size:10px">เงินเพิ่ม</th><th style="font-size:10px">ค่าปรับ</th>
+            <th style="font-size:10px">ภาษี</th><th style="font-size:10px">เบี้ยปรับ</th><th style="font-size:10px">เงินเพิ่ม</th><th style="font-size:10px">ค่าปรับ</th>
+            <th style="font-size:10px">ภาษี</th><th style="font-size:10px">เบี้ยปรับ</th><th style="font-size:10px">เงินเพิ่ม</th><th style="font-size:10px">ค่าปรับ</th>
+            <th style="font-size:10px">ภาษี</th><th style="font-size:10px">เบี้ยปรับ</th><th style="font-size:10px">เงินเพิ่ม</th><th style="font-size:10px">ค่าปรับ</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>`;
+ 
+  compRecords.forEach((r, i) => {
+    html += `
+      <tr>
+        <td class="center">${i+1}</td>
+        <td>${r.nightbiz_survey?.name || '—'}</td>
+        <td class="center">${r.nightbiz_survey?.tin || '—'}</td>
+        <td>${r.nightbiz_survey?.biz_brand_name || '—'}</td>
+        <td class="center">${r.pay_date || '—'}</td>
+        <td class="right">${fmt(r.pit_tax)}</td><td class="right">${fmt(r.pit_fine)}</td><td class="right">${fmt(r.pit_sur)}</td><td class="right">${fmt(r.pit_pen)}</td>
+        <td class="right">${fmt(r.cit_tax)}</td><td class="right">${fmt(r.cit_fine)}</td><td class="right">${fmt(r.cit_sur)}</td><td class="right">${fmt(r.cit_pen)}</td>
+        <td class="right">${fmt(r.vat_tax)}</td><td class="right">${fmt(r.vat_fine)}</td><td class="right">${fmt(r.vat_sur)}</td><td class="right">${fmt(r.vat_pen)}</td>
+        <td class="right">${fmt(r.sbt_tax)}</td><td class="right">${fmt(r.sbt_fine)}</td><td class="right">${fmt(r.sbt_sur)}</td><td class="right">${fmt(r.sbt_pen)}</td>
+        <td class="right">${fmt(r.stm_tax)}</td><td class="right">${fmt(r.stm_fine)}</td><td class="right">${fmt(r.stm_sur)}</td><td class="right">${fmt(r.stm_pen)}</td>
+        <td class="right total">${fmt(grandTotal(r))}</td>
+      </tr>`;
+  });
+ 
+  html += `
+        </tbody>
+      </table>
+      <p style="text-align:center;margin-top:30px;font-size:11px;color:#666">
+        รวมทั้งสิ้น ${compRecords.length} รายการ
+      </p>
+    </body>
+    </html>`;
+ 
+  const printWin = window.open('', '_blank');
+  printWin.document.write(html);
+  printWin.document.close();
+  setTimeout(() => printWin.print(), 500);
+}
+ 
 function switchTab(name, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -950,4 +1060,3 @@ checkSession();
 </script>
 </body>
 </html>
- 
