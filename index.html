@@ -4,294 +4,179 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>โครงการสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กรุงเทพมหานคร 13</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --primary: #1a3a5c;
-    --primary-light: #e8f0f8;
-    --accent: #c8a84b;
-    --accent-light: #fdf6e3;
-    --danger: #c0392b;
-    --danger-light: #fdf0ee;
-    --success: #1a6b3a;
-    --success-light: #eaf5ee;
-    --warning: #b7770d;
-    --warning-light: #fef9ec;
-    --border: #d0d9e4;
-    --border-light: #e8edf3;
-    --text: #1c2b3a;
-    --text-muted: #6b7e90;
-    --bg: #f4f6f9;
-    --surface: #ffffff;
-    --radius: 8px;
-    --radius-lg: 12px;
-    --shadow: 0 1px 3px rgba(26,58,92,0.08), 0 1px 2px rgba(26,58,92,0.04);
-    --shadow-md: 0 4px 16px rgba(26,58,92,0.10);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Sarabun', sans-serif; font-size: 15px; background: var(--bg); color: var(--text); line-height: 1.6; }
+:root {
+  --primary:#1a3a5c; --primary-light:#e8f0f8;
+  --accent:#c8a84b; --accent-light:#fdf6e3;
+  --danger:#c0392b; --danger-light:#fdf0ee;
+  --success:#1a6b3a; --success-light:#eaf5ee;
+  --warning:#b7770d; --warning-light:#fef9ec;
+  --border:#d0d9e4; --border-light:#e8edf3;
+  --text:#1c2b3a; --text-muted:#6b7e90;
+  --bg:#f4f6f9; --surface:#ffffff;
+  --radius:8px; --radius-lg:12px;
+  --shadow:0 1px 3px rgba(26,58,92,.08),0 1px 2px rgba(26,58,92,.04);
+  --shadow-md:0 4px 16px rgba(26,58,92,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:var(--text);line-height:1.6}
 
-  /* LOGIN PAGE */
-  .login-page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #0f2540 0%, #1a3a5c 50%, #1e4a72 100%);
-    padding: 1rem;
-  }
-  .login-card {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    padding: 2.5rem 2rem;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: var(--shadow-md);
-  }
-  .login-logo {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  .login-logo .emblem {
-    width: 64px; height: 64px;
-    background: var(--primary);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 1rem;
-    font-size: 28px;
-  }
-  .login-logo h1 { font-size: 17px; font-weight: 600; color: var(--primary); }
-  .login-logo p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-  .login-divider {
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-    border-radius: 2px;
-    margin-bottom: 1.75rem;
-  }
-  .form-group { margin-bottom: 1rem; }
-  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 5px; }
-  .form-group input, .form-group select, .form-group textarea {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 9px 12px;
-    font-size: 14px;
-    font-family: 'Sarabun', sans-serif;
-    background: var(--surface);
-    color: var(--text);
-    transition: border-color 0.15s;
-  }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(26,58,92,0.08);
-  }
-  .form-group textarea { resize: vertical; min-height: 80px; }
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 10px 20px;
-    border-radius: var(--radius);
-    font-size: 14px; font-weight: 500;
-    font-family: 'Sarabun', sans-serif;
-    cursor: pointer; border: none;
-    transition: all 0.15s;
-  }
-  .btn-primary { background: var(--primary); color: #fff; }
-  .btn-primary:hover { background: #163352; }
-  .btn-outline { background: transparent; color: var(--primary); border: 1px solid var(--border); }
-  .btn-outline:hover { background: var(--primary-light); border-color: var(--primary); }
-  .btn-danger { background: var(--danger); color: #fff; }
-  .btn-danger:hover { background: #a93226; }
-  .btn-accent { background: var(--accent); color: #fff; }
-  .btn-sm { padding: 6px 12px; font-size: 13px; }
-  .btn-full { width: 100%; }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+/* ── LOGIN ── */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f2540,#1a3a5c,#1e4a72);padding:1rem}
+.login-card{background:var(--surface);border-radius:var(--radius-lg);padding:2.5rem 2rem;width:100%;max-width:400px;box-shadow:var(--shadow-md)}
+.login-logo{text-align:center;margin-bottom:2rem}
+.login-logo .emblem{width:64px;height:64px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:28px}
+.login-logo h1{font-size:17px;font-weight:600;color:var(--primary)}
+.login-logo p{font-size:13px;color:var(--text-muted);margin-top:4px}
+.login-divider{height:3px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:2px;margin-bottom:1.75rem}
 
-  /* MAIN APP */
-  .app { display: none; min-height: 100vh; }
-  .topbar {
-    background: var(--primary);
-    color: #fff;
-    padding: 0 1.5rem;
-    height: 56px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .topbar-brand { display: flex; align-items: center; gap: 10px; }
-  .topbar-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-  .topbar-brand span { font-size: 15px; font-weight: 600; }
-  .topbar-right { display: flex; align-items: center; gap: 12px; }
-  .user-badge {
-    font-size: 12px; color: rgba(255,255,255,0.75);
-    background: rgba(255,255,255,0.1);
-    padding: 4px 12px; border-radius: 99px;
-  }
-  .btn-logout {
-    background: rgba(255,255,255,0.12);
-    color: #fff; border: none;
-    padding: 6px 14px; border-radius: var(--radius);
-    font-size: 13px; cursor: pointer;
-    font-family: 'Sarabun', sans-serif;
-    transition: background 0.15s;
-  }
-  .btn-logout:hover { background: rgba(255,255,255,0.22); }
+/* ── SHARED ── */
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:13px;font-weight:500;color:var(--text-muted);margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;font-size:14px;font-family:'Sarabun',sans-serif;background:var(--surface);color:var(--text);transition:border-color .15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,58,92,.08)}
+.form-group textarea{resize:vertical;min-height:80px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:var(--radius);font-size:14px;font-weight:500;font-family:'Sarabun',sans-serif;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}.btn-primary:hover{background:#163352}
+.btn-outline{background:transparent;color:var(--primary);border-color:var(--border)}.btn-outline:hover{background:var(--primary-light);border-color:var(--primary)}
+.btn-success{background:var(--success);color:#fff;border-color:var(--success)}.btn-success:hover{opacity:.88}
+.btn-danger-soft{color:var(--danger);border-color:#f5c4be;background:transparent}.btn-danger-soft:hover{background:var(--danger-light)}
+.btn-sm{padding:6px 12px;font-size:13px}
+.btn-full{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.required{color:var(--danger)}
 
-  .tabs-bar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border-light);
-    padding: 0 1.5rem;
-    display: flex; gap: 0;
-    position: sticky; top: 56px; z-index: 99;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-  .tab-btn {
-    padding: 14px 20px;
-    font-size: 13px; font-weight: 500;
-    font-family: 'Sarabun', sans-serif;
-    cursor: pointer; border: none; background: none;
-    color: var(--text-muted);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: all 0.15s;
-  }
-  .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-  .tab-btn:hover:not(.active) { color: var(--text); }
+/* ── APP SHELL ── */
+.app{display:none;min-height:100vh}
+.topbar{background:var(--primary);color:#fff;padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.topbar-brand{display:flex;align-items:center;gap:10px}
+.topbar-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.topbar-brand span{font-size:15px;font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.user-badge{font-size:12px;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);padding:4px 12px;border-radius:99px}
+.btn-logout{background:rgba(255,255,255,.12);color:#fff;border:none;padding:6px 14px;border-radius:var(--radius);font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif}
+.btn-logout:hover{background:rgba(255,255,255,.22)}
+.tabs-bar{background:var(--surface);border-bottom:1px solid var(--border-light);padding:0 1.5rem;display:flex;position:sticky;top:56px;z-index:99;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow-x:auto}
+.tab-btn{padding:14px 18px;font-size:13px;font-weight:500;font-family:'Sarabun',sans-serif;cursor:pointer;border:none;background:none;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tab-btn:hover:not(.active){color:var(--text)}
+.main-content{max-width:1100px;margin:0 auto;padding:1.5rem}
+.panel{display:none}.panel.active{display:block}
 
-  .main-content { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
-  .panel { display: none; }
-  .panel.active { display: block; }
+/* ── CARDS / FORMS ── */
+.card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);padding:1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.card-title{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.25rem;padding-bottom:10px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:8px}
+.card-title .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.col-full{grid-column:1/-1}
+.radio-row,.check-row{display:flex;gap:1.25rem;flex-wrap:wrap;margin-top:4px}
+.radio-item,.check-item{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
+.radio-item input,.check-item input{width:auto;accent-color:var(--primary)}
+.vat-detail{background:var(--primary-light);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-top:10px}
+.tax-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.tax-year-box{border:1px solid var(--border-light);border-radius:var(--radius);padding:12px;background:var(--bg)}
+.tax-year-label{font-size:12px;font-weight:600;color:var(--primary);margin-bottom:10px}
+.tax-year-box .form-group{margin-bottom:8px}
+.actions{display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap}
 
-  .card {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-light);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    box-shadow: var(--shadow);
-  }
-  .card-title {
-    font-size: 12px; font-weight: 600;
-    color: var(--text-muted);
-    text-transform: uppercase; letter-spacing: 0.06em;
-    margin-bottom: 1.25rem;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border-light);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .card-title .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+/* ── ALERTS ── */
+.alert{padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;animation:slideIn .2s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.alert-success{background:var(--success-light);color:var(--success);border:1px solid #b6e0c6}
+.alert-error{background:var(--danger-light);color:var(--danger);border:1px solid #f5c4be}
+.alert-warning{background:var(--warning-light);color:var(--warning);border:1px solid #f5dfa0}
 
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
-  .col-full { grid-column: 1 / -1; }
-  .required { color: var(--danger); }
+/* ── LIST PANEL ── */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+.stat-box{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:1rem;box-shadow:var(--shadow)}
+.stat-label{font-size:12px;color:var(--text-muted);margin-bottom:2px}
+.stat-value{font-size:24px;font-weight:600;color:var(--primary)}
+.stat-box.accent .stat-value{color:var(--accent)}
+.search-row{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.search-row input{flex:1;min-width:180px}
+.search-row select{min-width:140px}
+.record-item{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:10px;box-shadow:var(--shadow);transition:box-shadow .15s}
+.record-item:hover{box-shadow:var(--shadow-md)}
+.record-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
+.record-name{font-size:15px;font-weight:600;color:var(--primary)}
+.record-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.pill{font-size:11px;padding:3px 10px;border-radius:99px;font-weight:500;border:1px solid transparent}
+.pill-juristic{background:#ddeeff;color:#1a4e8a}
+.pill-personal{background:#e3f5e9;color:#1a6b3a}
+.pill-vat{background:#fef3d8;color:#8a5c00}
+.pill-novat{background:#f0f2f5;color:#5a6878}
+.pill-risk-high{background:#fde8e6;color:#a0281c}
+.pill-risk-mid{background:#fff0d6;color:#8a5c00}
+.pill-risk-low{background:#e8f5ee;color:#1a6b3a}
+.pill-unit{background:var(--primary-light);color:var(--primary)}
+.record-addr{font-size:12px;color:var(--text-muted)}
+.record-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap}
+.empty{text-align:center;padding:3rem 1rem;color:var(--text-muted);font-size:14px}
+.loading{text-align:center;padding:2rem;color:var(--text-muted);font-size:13px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  .radio-row, .check-row { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 4px; }
-  .radio-item, .check-item { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
-  .radio-item input[type=radio], .check-item input[type=checkbox] { width: auto; accent-color: var(--primary); }
+/* ── COMPLETED TAB ── */
+.search-box-big{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.search-box-big h3{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:.75rem}
+.search-input-row{display:flex;gap:8px;flex-wrap:wrap}
+.search-input-row input{flex:1;min-width:220px}
 
-  .vat-detail {
-    background: var(--primary-light);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem;
-    margin-top: 10px;
-  }
-  .tax-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-  .tax-year-box {
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius);
-    padding: 12px;
-    background: var(--bg);
-  }
-  .tax-year-label { font-size: 12px; font-weight: 600; color: var(--primary); margin-bottom: 10px; }
-  .tax-year-box .form-group { margin-bottom: 8px; }
-  .tax-year-box .form-group:last-child { margin-bottom: 0; }
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border-light)}
+.work-table{width:100%;border-collapse:collapse;font-size:12px;min-width:1400px}
+.work-table th{background:var(--primary);color:#fff;padding:9px 8px;text-align:center;font-weight:500;white-space:nowrap;border-right:1px solid rgba(255,255,255,.15)}
+.work-table th:last-child{border-right:none}
+.work-table th.grp-head{background:#14304f;font-size:11px;letter-spacing:.03em}
+.work-table td{padding:8px 8px;border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light);vertical-align:middle}
+.work-table td:last-child{border-right:none}
+.work-table tr:last-child td{border-bottom:none}
+.work-table tr:hover td{background:#f0f6ff}
+.work-table .num{text-align:right;font-family:monospace;font-size:12px}
+.work-table .ctr{text-align:center}
+.work-table .tax-col{background:#fffbf0}
+.work-table .total-col{background:var(--success-light);font-weight:600;color:var(--success);text-align:right;font-family:monospace}
 
-  .actions { display: flex; gap: 10px; margin-top: 1.5rem; flex-wrap: wrap; }
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:700px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow-md)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;padding-bottom:10px;border-bottom:1px solid var(--border-light)}
+.modal-title{font-size:16px;font-weight:600;color:var(--primary)}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-muted);line-height:1}
+.modal-close:hover{color:var(--text)}
+.info-band{background:var(--primary-light);border-radius:var(--radius);padding:10px 14px;margin-bottom:1.25rem;font-size:13px;display:flex;gap:24px;flex-wrap:wrap}
+.info-band b{color:var(--primary)}
+.tax-input-table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+.tax-input-table th{background:var(--primary);color:#fff;padding:8px 10px;font-weight:500;text-align:center}
+.tax-input-table td{padding:6px 6px;border-bottom:1px solid var(--border-light)}
+.tax-input-table tr:last-child td{border-bottom:none}
+.tax-input-table tr:nth-child(even) td{background:#fafcff}
+.tax-input-table td:first-child{font-weight:500;padding-left:10px;white-space:nowrap}
+.tax-input-table input{width:100%;text-align:right;border:1px solid var(--border);border-radius:4px;padding:5px 7px;font-size:13px;font-family:'Sarabun',sans-serif}
+.tax-input-table input:focus{outline:none;border-color:var(--primary)}
 
-  /* ALERT */
-  .alert {
-    padding: 10px 14px; border-radius: var(--radius);
-    font-size: 13px; margin-bottom: 1rem;
-    display: flex; align-items: center; gap: 8px;
-    animation: slideIn 0.2s ease;
-  }
-  @keyframes slideIn { from { opacity:0; transform: translateY(-6px); } to { opacity:1; transform: none; } }
-  .alert-success { background: var(--success-light); color: var(--success); border: 1px solid #b6e0c6; }
-  .alert-error { background: var(--danger-light); color: var(--danger); border: 1px solid #f5c4be; }
-  .alert-warning { background: var(--warning-light); color: var(--warning); border: 1px solid #f5dfa0; }
+/* ── EXPORT ── */
+.exp-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+.exp-row:last-child{border-bottom:none}
 
-  /* LIST */
-  .stat-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 1.5rem; }
-  .stat-box { background: var(--surface); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 1rem; box-shadow: var(--shadow); }
-  .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 2px; }
-  .stat-value { font-size: 24px; font-weight: 600; color: var(--primary); }
-  .stat-box.accent .stat-value { color: var(--accent); }
-
-  .search-row { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
-  .search-row input { flex: 1; min-width: 200px; }
-  .search-row select { min-width: 160px; }
-
-  .record-item {
-    background: var(--surface);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
-    padding: 1rem 1.25rem;
-    margin-bottom: 10px;
-    box-shadow: var(--shadow);
-    transition: box-shadow 0.15s;
-  }
-  .record-item:hover { box-shadow: var(--shadow-md); }
-  .record-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
-  .record-name { font-size: 15px; font-weight: 600; color: var(--primary); }
-  .record-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-  .pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
-  .pill {
-    font-size: 11px; padding: 3px 10px; border-radius: 99px;
-    font-weight: 500; border: 1px solid transparent;
-  }
-  .pill-juristic { background: #ddeeff; color: #1a4e8a; }
-  .pill-personal { background: #e3f5e9; color: #1a6b3a; }
-  .pill-vat { background: #fef3d8; color: #8a5c00; }
-  .pill-novat { background: #f0f2f5; color: #5a6878; }
-  .pill-risk-high { background: #fde8e6; color: #a0281c; }
-  .pill-risk-mid { background: #fff0d6; color: #8a5c00; }
-  .pill-risk-low { background: #e8f5ee; color: #1a6b3a; }
-  .pill-unit { background: var(--primary-light); color: var(--primary); }
-  .record-addr { font-size: 12px; color: var(--text-muted); }
-  .record-actions { display: flex; gap: 6px; flex-shrink: 0; }
-
-  .empty { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 14px; }
-  .loading { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 13px; }
-
-  /* EXPORT */
-  .export-stat { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-top: 1rem; }
-  .exp-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light); font-size: 13px; }
-  .exp-row:last-child { border-bottom: none; }
-
-  /* HIDDEN */
-  .hidden { display: none !important; }
-
-  /* SPINNER */
-  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  @media(max-width:640px) {
-    .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
-    .stat-row { grid-template-columns: 1fr 1fr; }
-    .tax-grid { grid-template-columns: 1fr; }
-    .topbar-brand span { font-size: 13px; }
-    .main-content { padding: 1rem; }
-  }
+.hidden{display:none!important}
+@media(max-width:640px){
+  .form-grid{grid-template-columns:1fr}
+  .stat-row{grid-template-columns:1fr 1fr}
+  .tax-grid{grid-template-columns:1fr}
+  .info-band{flex-direction:column;gap:6px}
+}
 </style>
 </head>
 <body>
 
-<!-- ==================== LOGIN PAGE ==================== -->
+<!-- ════════════════════════════════════════════════
+     LOGIN
+════════════════════════════════════════════════ -->
 <div id="loginPage" class="login-page">
   <div class="login-card">
     <div class="login-logo">
@@ -307,18 +192,16 @@
     </div>
     <div class="form-group">
       <label>รหัสผ่าน</label>
-      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+      <input type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button class="btn btn-primary btn-full" id="loginBtn" onclick="doLogin()">
-      เข้าสู่ระบบ
-    </button>
-    <p style="text-align:center; font-size:12px; color:var(--text-muted); margin-top:1rem;">
-      ติดต่อผู้ดูแลระบบเพื่อขอบัญชีผู้ใช้งาน
-    </p>
+    <button class="btn btn-primary btn-full" id="loginBtn" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:1rem">ติดต่อผู้ดูแลระบบเพื่อขอบัญชีผู้ใช้งาน</p>
   </div>
 </div>
 
-<!-- ==================== MAIN APP ==================== -->
+<!-- ════════════════════════════════════════════════
+     APP
+════════════════════════════════════════════════ -->
 <div id="app" class="app">
   <div class="topbar">
     <div class="topbar-brand">
@@ -332,15 +215,16 @@
   </div>
 
   <div class="tabs-bar">
-    <button class="tab-btn active" onclick="switchTab('input', this)">บันทึกข้อมูล</button>
-    <button class="tab-btn" onclick="switchTab('list', this)">รายการทั้งหมด</button>
-    <button class="tab-btn" onclick="switchTab('export', this)">ส่งออก / สรุป</button>
+    <button class="tab-btn active" onclick="switchTab('input',this)">📋 บันทึกข้อมูล</button>
+    <button class="tab-btn" onclick="switchTab('list',this)">📂 รายการทั้งหมด</button>
+    <button class="tab-btn" onclick="switchTab('completed',this)">✅ งานที่ทำเสร็จ</button>
+    <button class="tab-btn" onclick="switchTab('export',this)">📥 ส่งออก / สรุป</button>
   </div>
 
   <div class="main-content">
     <div id="appAlert"></div>
 
-    <!-- ===== INPUT PANEL ===== -->
+    <!-- ══ INPUT ══════════════════════════════════ -->
     <div id="panel-input" class="panel active">
 
       <div class="card">
@@ -360,6 +244,10 @@
           <div class="form-group col-full">
             <label id="nameLabel">ชื่อนิติบุคคล <span class="required">*</span></label>
             <input type="text" id="bizName" placeholder="ชื่อบริษัท / ห้างหุ้นส่วน / ชื่อ-นามสกุล">
+          </div>
+          <div class="form-group col-full">
+            <label>ชื่อสถานประกอบการ (ชื่อที่เรียกทั่วไป)</label>
+            <input type="text" id="bizBrandName" placeholder="เช่น ร้าน A บาร์ B คลับ C...">
           </div>
           <div class="form-group" id="regNumGroup">
             <label>เลขทะเบียนนิติบุคคล</label>
@@ -389,30 +277,12 @@
       <div class="card">
         <div class="card-title"><span class="dot"></span>สถานที่ตั้งกิจการ</div>
         <div class="form-grid">
-          <div class="form-group col-full">
-            <label>ที่อยู่ <span class="required">*</span></label>
-            <input type="text" id="address" placeholder="บ้านเลขที่ / อาคาร / ชั้น / ซอย / ถนน">
-          </div>
-          <div class="form-group">
-            <label>แขวง <span class="required">*</span></label>
-            <input type="text" id="subdistrict" placeholder="แขวง...">
-          </div>
-          <div class="form-group">
-            <label>เขต <span class="required">*</span></label>
-            <input type="text" id="district" placeholder="เขต...">
-          </div>
-          <div class="form-group">
-            <label>จังหวัด</label>
-            <input type="text" id="province" value="กรุงเทพมหานคร">
-          </div>
-          <div class="form-group">
-            <label>รหัสไปรษณีย์</label>
-            <input type="text" id="postalCode" maxlength="5" placeholder="10XXX">
-          </div>
-          <div class="form-group col-full">
-            <label>หมายเหตุสถานที่</label>
-            <input type="text" id="locationNote" placeholder="เช่น ใกล้ BTS / ห้างสรรพสินค้า...">
-          </div>
+          <div class="form-group col-full"><label>ที่อยู่ <span class="required">*</span></label><input type="text" id="address" placeholder="บ้านเลขที่ / อาคาร / ชั้น / ซอย / ถนน"></div>
+          <div class="form-group"><label>แขวง <span class="required">*</span></label><input type="text" id="subdistrict" placeholder="แขวง..."></div>
+          <div class="form-group"><label>เขต <span class="required">*</span></label><input type="text" id="district" placeholder="เขต..."></div>
+          <div class="form-group"><label>จังหวัด</label><input type="text" id="province" value="กรุงเทพมหานคร"></div>
+          <div class="form-group"><label>รหัสไปรษณีย์</label><input type="text" id="postalCode" maxlength="5" placeholder="10XXX"></div>
+          <div class="form-group col-full"><label>หมายเหตุสถานที่</label><input type="text" id="locationNote" placeholder="เช่น ใกล้ BTS..."></div>
         </div>
       </div>
 
@@ -428,33 +298,19 @@
         </div>
         <div id="vatDetail" class="vat-detail hidden">
           <div class="form-grid">
-            <div class="form-group">
-              <label>เลขทะเบียน VAT</label>
-              <input type="text" id="vatNumber" placeholder="PP XXXXXXXXXXX">
+            <div class="form-group"><label>เลขทะเบียน VAT</label><input type="text" id="vatNumber" placeholder="PP XXXXXXXXXXX"></div>
+            <div class="form-group"><label>วันที่จดทะเบียน VAT</label><input type="date" id="vatRegDate"></div>
+            <div class="form-group"><label>รอบการยื่น (ภ.พ.30)</label>
+              <select id="vatPeriod"><option value="">-- เลือก --</option><option>รายเดือน</option><option>รายไตรมาส</option></select>
             </div>
-            <div class="form-group">
-              <label>วันที่จดทะเบียน VAT</label>
-              <input type="date" id="vatRegDate">
-            </div>
-            <div class="form-group">
-              <label>รอบการยื่น (ภ.พ.30)</label>
-              <select id="vatPeriod">
-                <option value="">-- เลือก --</option>
-                <option>รายเดือน</option>
-                <option>รายไตรมาส</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>ยอดขาย VAT ล่าสุด (บาท)</label>
-              <input type="number" id="vatSales" placeholder="0">
-            </div>
+            <div class="form-group"><label>ยอดขาย VAT ล่าสุด (บาท)</label><input type="number" id="vatSales" placeholder="0"></div>
           </div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-title"><span class="dot"></span>ประวัติการเสียภาษีเงินได้</div>
-        <div class="form-group" style="margin-bottom:1rem;">
+        <div class="form-group" style="margin-bottom:1rem">
           <label>ประเภทภาษีเงินได้ที่เกี่ยวข้อง</label>
           <div class="check-row">
             <label class="check-item"><input type="checkbox" id="hasCIT"> ภาษีเงินได้นิติบุคคล (ภ.ง.ด.50/51)</label>
@@ -462,34 +318,20 @@
             <label class="check-item"><input type="checkbox" id="hasWT"> ภาษีหัก ณ ที่จ่าย (ภ.ง.ด.1/3/53)</label>
           </div>
         </div>
-        <div class="card-title" style="margin-top:0.5rem;"><span class="dot"></span>ข้อมูลย้อนหลัง 3 ปี</div>
+        <div class="card-title" style="margin-top:.5rem"><span class="dot"></span>ข้อมูลย้อนหลัง 3 ปี</div>
         <div class="tax-grid" id="taxYearsContainer"></div>
       </div>
 
       <div class="card">
-        <div class="card-title"><span class="dot"></span>ข้อมูลเจ้าหน้าที่และหมายเหตุ</div>
+        <div class="card-title"><span class="dot"></span>ข้อมูลเจ้าหน้าที่</div>
         <div class="form-grid">
-          <div class="form-group">
-            <label>วันที่สำรวจ <span class="required">*</span></label>
-            <input type="date" id="surveyDate">
-          </div>
-          <div class="form-group">
-            <label>สังกัดสำนักงาน / ฝ่าย</label>
-            <input type="text" id="officerUnit" placeholder="เช่น นต.061">
-          </div>
+          <div class="form-group"><label>วันที่สำรวจ <span class="required">*</span></label><input type="date" id="surveyDate"></div>
+          <div class="form-group"><label>สังกัด / ฝ่าย</label><input type="text" id="officerUnit" placeholder="เช่น นต.061"></div>
           <div class="form-group">
             <label>ลำดับความเสี่ยง</label>
-            <select id="riskLevel">
-              <option value="">-- เลือก --</option>
-              <option>สูง</option>
-              <option>ปานกลาง</option>
-              <option>ต่ำ</option>
-            </select>
+            <select id="riskLevel"><option value="">-- เลือก --</option><option>สูง</option><option>ปานกลาง</option><option>ต่ำ</option></select>
           </div>
-          <div class="form-group col-full">
-            <label>หมายเหตุ / ข้อสังเกต</label>
-            <textarea id="remarks" placeholder="บันทึกข้อสังเกตเพิ่มเติม..."></textarea>
-          </div>
+          <div class="form-group col-full"><label>หมายเหตุ / ข้อสังเกต</label><textarea id="remarks" placeholder="บันทึกข้อสังเกตเพิ่มเติม..."></textarea></div>
         </div>
       </div>
 
@@ -497,10 +339,9 @@
         <button class="btn btn-primary" id="saveBtn" onclick="saveRecord()">บันทึกข้อมูล</button>
         <button class="btn btn-outline" onclick="clearForm()">ล้างแบบฟอร์ม</button>
       </div>
-      <p style="font-size:12px;color:var(--text-muted);margin-top:8px;">* ข้อมูลบันทึกขึ้น Supabase ทันที — เจ้าหน้าที่ทุกคนเห็นข้อมูลเดียวกัน</p>
     </div>
 
-    <!-- ===== LIST PANEL ===== -->
+    <!-- ══ LIST ═══════════════════════════════════ -->
     <div id="panel-list" class="panel">
       <div class="stat-row">
         <div class="stat-box"><div class="stat-label">ทั้งหมด</div><div class="stat-value" id="s-total">—</div></div>
@@ -510,421 +351,608 @@
       </div>
       <div class="search-row">
         <input type="text" id="searchQ" placeholder="ค้นหาชื่อกิจการ / เลขผู้เสียภาษี..." oninput="renderList()">
-        <select id="filterType" onchange="renderList()">
-          <option value="">ทุกประเภท</option>
-          <option>นิติบุคคล</option>
-          <option>บุคคลธรรมดา</option>
-        </select>
-        <select id="filterVAT" onchange="renderList()">
-          <option value="">VAT ทุกสถานะ</option>
-          <option>จดทะเบียน VAT</option>
-          <option>ไม่จดทะเบียน VAT</option>
-        </select>
-        <select id="filterRisk" onchange="renderList()">
-          <option value="">ทุกระดับความเสี่ยง</option>
-          <option>สูง</option>
-          <option>ปานกลาง</option>
-          <option>ต่ำ</option>
-        </select>
+        <select id="filterType" onchange="renderList()"><option value="">ทุกประเภท</option><option>นิติบุคคล</option><option>บุคคลธรรมดา</option></select>
+        <select id="filterVAT" onchange="renderList()"><option value="">VAT ทุกสถานะ</option><option>จดทะเบียน VAT</option><option>ไม่จดทะเบียน VAT</option></select>
+        <select id="filterRisk" onchange="renderList()"><option value="">ทุกระดับความเสี่ยง</option><option>สูง</option><option>ปานกลาง</option><option>ต่ำ</option></select>
         <button class="btn btn-outline btn-sm" onclick="loadRecords()">🔄 รีเฟรช</button>
       </div>
       <div id="recordList"><div class="loading">กำลังโหลด...</div></div>
     </div>
 
-    <!-- ===== EXPORT PANEL ===== -->
+    <!-- ══ COMPLETED ══════════════════════════════ -->
+    <div id="panel-completed" class="panel">
+
+      <!-- ค้นหา -->
+      <div class="search-box-big">
+        <h3>🔍 ค้นหาผู้ประกอบการเพื่อบันทึกงานที่ทำเสร็จ</h3>
+        <div class="search-input-row">
+          <input type="text" id="compQ" placeholder="พิมพ์ชื่อกิจการ / ชื่อสถานประกอบการ / เลขประจำตัวผู้เสียภาษี..." oninput="searchComp()">
+          <select id="compFilterType" onchange="searchComp()">
+            <option value="">ทุกประเภท</option><option>นิติบุคคล</option><option>บุคคลธรรมดา</option>
+          </select>
+        </div>
+      </div>
+      <div id="compSearchResult"></div>
+
+      <!-- ตารางงานที่ทำเสร็จ -->
+      <div class="card">
+        <div class="card-title" style="flex-wrap:wrap;gap:8px">
+          <span class="dot"></span>รายการงานที่ทำเสร็จทั้งหมด
+          <span style="margin-left:auto;display:flex;gap:8px">
+            <button class="btn btn-outline btn-sm" onclick="loadCompleted()">🔄 รีเฟรช</button>
+            <button class="btn btn-success btn-sm" onclick="exportCompCSV()">📥 Export CSV</button>
+          </span>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:.75rem">
+          รวมทั้งหมด <b id="comp-count">—</b> รายการ
+        </div>
+        <div class="tbl-wrap">
+          <table class="work-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="min-width:46px">ลำดับ</th>
+                <th rowspan="2" style="min-width:150px">ชื่อผู้ประกอบการ</th>
+                <th rowspan="2" style="min-width:125px">เลขประจำตัว<br>ผู้เสียภาษี</th>
+                <th rowspan="2" style="min-width:130px">ชื่อสถาน<br>ประกอบการ</th>
+                <th rowspan="2" style="min-width:105px">วันที่ชำระภาษี</th>
+                <th colspan="4" class="grp-head">ภาษีเงินได้บุคคลธรรมดา (บาท)</th>
+                <th colspan="4" class="grp-head">ภาษีเงินได้นิติบุคคล (บาท)</th>
+                <th colspan="4" class="grp-head">ภาษีมูลค่าเพิ่ม (บาท)</th>
+                <th colspan="4" class="grp-head">ภาษีธุรกิจเฉพาะ (บาท)</th>
+                <th colspan="4" class="grp-head">อากรแสตมป์ (บาท)</th>
+                <th rowspan="2" style="min-width:110px">รวมทั้งสิ้น<br>(บาท)</th>
+                <th rowspan="2" style="min-width:70px">จัดการ</th>
+              </tr>
+              <tr>
+                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+              </tr>
+            </thead>
+            <tbody id="compTbody">
+              <tr><td colspan="27" class="loading">กำลังโหลด...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ EXPORT ══════════════════════════════════ -->
     <div id="panel-export" class="panel">
       <div class="card">
         <div class="card-title"><span class="dot"></span>ส่งออกข้อมูล</div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:1rem;">ส่งออกข้อมูลทั้งหมดในรูปแบบ CSV สำหรับนำเข้า Excel หรือระบบ RMS สรรพากร</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:1rem">ส่งออกข้อมูลในรูปแบบ CSV สำหรับ Excel</p>
         <div class="actions">
-          <button class="btn btn-primary" onclick="exportCSV()">📥 ดาวน์โหลด CSV</button>
-          <button class="btn btn-outline" onclick="exportCSVFiltered()">📥 CSV เฉพาะที่กรอง</button>
+          <button class="btn btn-primary" onclick="exportSurveyCSV()">📥 CSV ข้อมูลสำรวจ</button>
+          <button class="btn btn-outline" onclick="exportCompCSV()">📥 CSV งานที่ทำเสร็จ</button>
         </div>
       </div>
-      <div class="card">
-        <div class="card-title"><span class="dot"></span>สรุปตามประเภทกิจการ</div>
-        <div id="bizSummary"><div class="loading">กำลังโหลด...</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="dot"></span>สรุปตามสถานะ VAT</div>
-        <div id="vatSummary"><div class="loading">กำลังโหลด...</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="dot"></span>สรุปตามระดับความเสี่ยง</div>
-        <div id="riskSummary"><div class="loading">กำลังโหลด...</div></div>
-      </div>
+      <div class="card"><div class="card-title"><span class="dot"></span>สรุปตามประเภทกิจการ</div><div id="bizSummary"><div class="loading">กำลังโหลด...</div></div></div>
+      <div class="card"><div class="card-title"><span class="dot"></span>สรุปตามสถานะ VAT</div><div id="vatSummary"><div class="loading">กำลังโหลด...</div></div></div>
+      <div class="card"><div class="card-title"><span class="dot"></span>สรุปตามระดับความเสี่ยง</div><div id="riskSummary"><div class="loading">กำลังโหลด...</div></div></div>
     </div>
   </div>
 </div>
 
-<script>
-// ============================================================
-//  CONFIGURATION — แก้ไขค่านี้ก่อน deploy
-// ============================================================
-//const SUPABASE_URL  = 'https://vyidmbmukasbftaresxt.supabase.co';
-//const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5aWRtYm11a2FzYmZ0YXJlc3h0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2OTk3NjAsImV4cCI6MjA5MTI3NTc2MH0.VyEwk8xatE-Fs0cleRZZt2WqX6ERL9SsMJ7QRJ29xag';
-// ============================================================
+<!-- ════════════════════════════════════════════════
+     MODAL — บันทึกงานที่ทำเสร็จ
+════════════════════════════════════════════════ -->
+<div id="compModal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">บันทึกงานที่ทำเสร็จ</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
 
+    <!-- ข้อมูลผู้ประกอบการ -->
+    <div class="info-band" id="modalInfoBand"></div>
+
+    <!-- วันที่ -->
+    <div class="form-group">
+      <label>วันเดือนปีที่ชำระภาษี <span class="required">*</span></label>
+      <input type="date" id="cm_payDate" style="max-width:220px">
+    </div>
+
+    <!-- ตารางกรอกภาษี -->
+    <div style="overflow-x:auto">
+      <table class="tax-input-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:170px">ประเภทภาษี</th>
+            <th style="min-width:110px">ภาษี (บาท)</th>
+            <th style="min-width:110px">เบี้ยปรับ</th>
+            <th style="min-width:110px">เงินเพิ่ม</th>
+            <th style="min-width:110px">ค่าปรับ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ภาษีเงินได้บุคคลธรรมดา</td>
+            <td><input type="number" id="cm_pit_tax" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_pit_fine" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_pit_sur" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_pit_pen" placeholder="0" min="0"></td>
+          </tr>
+          <tr>
+            <td>ภาษีเงินได้นิติบุคคล</td>
+            <td><input type="number" id="cm_cit_tax" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_cit_fine" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_cit_sur" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_cit_pen" placeholder="0" min="0"></td>
+          </tr>
+          <tr>
+            <td>ภาษีมูลค่าเพิ่ม (VAT)</td>
+            <td><input type="number" id="cm_vat_tax" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_vat_fine" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_vat_sur" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_vat_pen" placeholder="0" min="0"></td>
+          </tr>
+          <tr>
+            <td>ภาษีธุรกิจเฉพาะ</td>
+            <td><input type="number" id="cm_sbt_tax" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_sbt_fine" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_sbt_sur" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_sbt_pen" placeholder="0" min="0"></td>
+          </tr>
+          <tr>
+            <td>อากรแสตมป์</td>
+            <td><input type="number" id="cm_stm_tax" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_stm_fine" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_stm_sur" placeholder="0" min="0"></td>
+            <td><input type="number" id="cm_stm_pen" placeholder="0" min="0"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="form-group" style="margin-top:1rem">
+      <label>หมายเหตุ</label>
+      <textarea id="cm_remarks" placeholder="บันทึกเพิ่มเติม..." style="min-height:60px"></textarea>
+    </div>
+
+    <input type="hidden" id="cm_surveyId">
+    <input type="hidden" id="cm_editId">
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="saveCompleted()">💾 บันทึกงานที่ทำเสร็จ</button>
+      <button class="btn btn-outline" onclick="closeModal()">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     SCRIPT
+════════════════════════════════════════════════ -->
+<script>
+// SUPABASE_URL และ SUPABASE_KEY อยู่ใน config.js
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
-let allRecords  = [];
-const TODAY_BE  = new Date().getFullYear() + 543;
+let allRecords   = [];
+let compRecords  = [];
+const TODAY_BE   = new Date().getFullYear() + 543;
 
-// ── Auth ──────────────────────────────────────────────────
+// ── AUTH ──────────────────────────────────────────────────────────────────
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pass  = document.getElementById('loginPassword').value;
-  if (!email || !pass) { showLoginAlert('กรุณากรอกอีเมลและรหัสผ่าน', 'error'); return; }
+  if (!email || !pass) { showLoginAlert('กรุณากรอกอีเมลและรหัสผ่าน','error'); return; }
   const btn = document.getElementById('loginBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> กำลังเข้าสู่ระบบ...';
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> กำลังเข้าสู่ระบบ...';
   const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
   if (error) {
-    showLoginAlert('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
-    btn.disabled = false; btn.textContent = 'เข้าสู่ระบบ';
-    return;
+    showLoginAlert('อีเมลหรือรหัสผ่านไม่ถูกต้อง','error');
+    btn.disabled = false; btn.textContent = 'เข้าสู่ระบบ'; return;
   }
-  currentUser = data.user;
-  showApp();
+  currentUser = data.user; showApp();
 }
-
 async function doLogout() {
-  await sb.auth.signOut();
-  currentUser = null;
+  await sb.auth.signOut(); currentUser = null;
   document.getElementById('app').style.display = 'none';
   document.getElementById('loginPage').style.display = 'flex';
   document.getElementById('loginPassword').value = '';
 }
-
 async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
   if (session) { currentUser = session.user; showApp(); }
 }
-
 function showApp() {
   document.getElementById('loginPage').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  const email = currentUser.email;
-  document.getElementById('userBadge').textContent = email;
-  initForm();
-  loadRecords();
+  document.getElementById('userBadge').textContent = currentUser.email;
+  initForm(); loadRecords(); loadCompleted();
 }
 
-// ── Form helpers ──────────────────────────────────────────
+// ── FORM HELPERS ──────────────────────────────────────────────────────────
 function initForm() {
   document.getElementById('surveyDate').value = new Date().toISOString().split('T')[0];
-  renderTaxYears();
-  onTypeChange();
+  document.getElementById('cm_payDate').value = new Date().toISOString().split('T')[0];
+  renderTaxYears(); onTypeChange();
 }
-
 function renderTaxYears() {
-  const c = document.getElementById('taxYearsContainer');
-  c.innerHTML = '';
+  const c = document.getElementById('taxYearsContainer'); c.innerHTML = '';
   for (let i = 2; i >= 0; i--) {
     const y = TODAY_BE - i;
-    c.innerHTML += `
-      <div class="tax-year-box">
-        <div class="tax-year-label">ปี ${y}</div>
-        <div class="form-group"><label>รายได้ / ยอดขาย (บาท)</label><input type="number" id="inc_${y}" placeholder="0"></div>
-        <div class="form-group"><label>ภาษีที่ยื่น (บาท)</label><input type="number" id="tax_${y}" placeholder="0"></div>
-        <div class="form-group"><label>สถานะการยื่น</label>
-          <select id="tst_${y}">
-            <option value="">-</option>
-            <option>ยื่นปกติ</option><option>ยื่นล่าช้า</option>
-            <option>ไม่ยื่น</option><option>ได้รับการยกเว้น</option>
-          </select></div>
-      </div>`;
+    c.innerHTML += `<div class="tax-year-box">
+      <div class="tax-year-label">ปี ${y}</div>
+      <div class="form-group"><label>รายได้ / ยอดขาย (บาท)</label><input type="number" id="inc_${y}" placeholder="0"></div>
+      <div class="form-group"><label>ภาษีที่ยื่น (บาท)</label><input type="number" id="tax_${y}" placeholder="0"></div>
+      <div class="form-group"><label>สถานะการยื่น</label>
+        <select id="tst_${y}"><option value="">-</option><option>ยื่นปกติ</option><option>ยื่นล่าช้า</option><option>ไม่ยื่น</option><option>ได้รับการยกเว้น</option></select>
+      </div></div>`;
   }
 }
-
 function onTypeChange() {
   const isJ = document.querySelector('input[name="taxpayerType"]:checked')?.value === 'นิติบุคคล';
   document.getElementById('nameLabel').innerHTML = (isJ ? 'ชื่อนิติบุคคล' : 'ชื่อ-นามสกุล') + ' <span class="required">*</span>';
   document.getElementById('regNumGroup').style.display = isJ ? '' : 'none';
 }
-
-function onVATChange(el) {
-  document.getElementById('vatDetail').classList.toggle('hidden', el.value !== 'จดทะเบียน VAT');
-}
-
-function onBizTypeChange() {
-  document.getElementById('otherBizGroup').classList.toggle('hidden', document.getElementById('bizType').value !== 'อื่น ๆ');
-}
-
-function gv(id) { return (document.getElementById(id)||{}).value?.trim()||''; }
+function onVATChange(el) { document.getElementById('vatDetail').classList.toggle('hidden', el.value !== 'จดทะเบียน VAT'); }
+function onBizTypeChange() { document.getElementById('otherBizGroup').classList.toggle('hidden', document.getElementById('bizType').value !== 'อื่น ๆ'); }
+const gv = id => (document.getElementById(id)||{}).value?.trim() || '';
+const gn = id => parseFloat(gv(id)) || 0;
 
 function clearForm(keepMsg) {
-  ['tin','bizName','regNumber','address','subdistrict','district','postalCode','locationNote',
-   'vatNumber','vatRegDate','vatSales','officerUnit','remarks'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.value='';
+  ['tin','bizName','bizBrandName','regNumber','address','subdistrict','district','postalCode',
+   'locationNote','vatNumber','vatRegDate','vatSales','officerUnit','remarks'].forEach(id => {
+    const e = document.getElementById(id); if (e) e.value = '';
   });
-  document.getElementById('province').value='กรุงเทพมหานคร';
-  document.getElementById('bizType').value='';
-  document.getElementById('vatPeriod').value='';
-  document.getElementById('riskLevel').value='';
-  document.querySelectorAll('input[name="taxpayerType"]')[0].checked=true;
-  document.querySelectorAll('input[name="vatStatus"]').forEach(r=>r.checked=false);
-  ['hasCIT','hasPIT','hasWT'].forEach(id=>document.getElementById(id).checked=false);
+  document.getElementById('province').value = 'กรุงเทพมหานคร';
+  ['bizType','vatPeriod','riskLevel'].forEach(id => document.getElementById(id).value = '');
+  document.querySelectorAll('input[name="taxpayerType"]')[0].checked = true;
+  document.querySelectorAll('input[name="vatStatus"]').forEach(r => r.checked = false);
+  ['hasCIT','hasPIT','hasWT'].forEach(id => document.getElementById(id).checked = false);
   document.getElementById('vatDetail').classList.add('hidden');
   document.getElementById('otherBizGroup').classList.add('hidden');
-  document.getElementById('surveyDate').value=new Date().toISOString().split('T')[0];
-  renderTaxYears();
-  onTypeChange();
-  if(!keepMsg) document.getElementById('appAlert').innerHTML='';
-  document.getElementById('saveBtn').dataset.editId='';
+  document.getElementById('surveyDate').value = new Date().toISOString().split('T')[0];
+  renderTaxYears(); onTypeChange();
+  document.getElementById('saveBtn').dataset.editId = '';
+  if (!keepMsg) document.getElementById('appAlert').innerHTML = '';
 }
 
-// ── Save record ───────────────────────────────────────────
+// ── SAVE SURVEY ───────────────────────────────────────────────────────────
 async function saveRecord() {
-  const tin     = gv('tin');
-  const name    = gv('bizName');
-  const address = gv('address');
-  const sub     = gv('subdistrict');
-  const dist    = gv('district');
-  const vatStatus = document.querySelector('input[name="vatStatus"]:checked')?.value||'';
-
-  if (!tin || tin.length!==13) { showAppAlert('กรุณากรอกเลขประจำตัวผู้เสียภาษี 13 หลัก','error'); return; }
-  if (!name)    { showAppAlert('กรุณากรอกชื่อกิจการ / ชื่อ-นามสกุล','error'); return; }
+  const tin = gv('tin'), name = gv('bizName'), address = gv('address');
+  const sub = gv('subdistrict'), dist = gv('district');
+  const vatStatus = document.querySelector('input[name="vatStatus"]:checked')?.value || '';
+  if (!tin || tin.length !== 13) { showAppAlert('กรุณากรอกเลขผู้เสียภาษี 13 หลัก','error'); return; }
+  if (!name) { showAppAlert('กรุณากรอกชื่อกิจการ','error'); return; }
   if (!gv('bizType') && !gv('otherBizType')) { showAppAlert('กรุณาเลือกประเภทกิจการ','error'); return; }
-  if (!address||!sub||!dist) { showAppAlert('กรุณากรอกที่อยู่ให้ครบถ้วน','error'); return; }
-  if (!vatStatus) { showAppAlert('กรุณาเลือกสถานะการจดทะเบียน VAT','error'); return; }
+  if (!address || !sub || !dist) { showAppAlert('กรุณากรอกที่อยู่ให้ครบ','error'); return; }
+  if (!vatStatus) { showAppAlert('กรุณาเลือกสถานะ VAT','error'); return; }
 
   const taxYears = [];
-  for(let i=2;i>=0;i--){
-    const y=TODAY_BE-i;
-    taxYears.push({year:y, income:gv('inc_'+y)||'0', tax:gv('tax_'+y)||'0', status:gv('tst_'+y)});
+  for (let i = 2; i >= 0; i--) {
+    const y = TODAY_BE - i;
+    taxYears.push({ year: y, income: gv('inc_'+y)||'0', tax: gv('tax_'+y)||'0', status: gv('tst_'+y) });
   }
-
   const payload = {
     type: document.querySelector('input[name="taxpayerType"]:checked').value,
-    tin, name,
-    reg_number: gv('regNumber'),
-    biz_type: gv('bizType')==='อื่น ๆ' ? gv('otherBizType') : gv('bizType'),
-    address, subdistrict:sub, district:dist,
-    province: gv('province'), postal_code: gv('postalCode'),
-    location_note: gv('locationNote'),
-    vat_status: vatStatus,
-    vat_number: gv('vatNumber'),
-    vat_reg_date: gv('vatRegDate')||null,
-    vat_period: gv('vatPeriod'),
-    vat_sales: parseFloat(gv('vatSales'))||0,
+    tin, name, biz_brand_name: gv('bizBrandName'), reg_number: gv('regNumber'),
+    biz_type: gv('bizType') === 'อื่น ๆ' ? gv('otherBizType') : gv('bizType'),
+    address, subdistrict: sub, district: dist, province: gv('province'),
+    postal_code: gv('postalCode'), location_note: gv('locationNote'),
+    vat_status: vatStatus, vat_number: gv('vatNumber'),
+    vat_reg_date: gv('vatRegDate') || null, vat_period: gv('vatPeriod'),
+    vat_sales: parseFloat(gv('vatSales')) || 0,
     has_cit: document.getElementById('hasCIT').checked,
     has_pit: document.getElementById('hasPIT').checked,
     has_wt:  document.getElementById('hasWT').checked,
-    tax_years: taxYears,
-    survey_date: gv('surveyDate'),
-    officer_email: currentUser.email,
-    officer_unit: gv('officerUnit'),
-    risk_level: gv('riskLevel'),
-    remarks: gv('remarks'),
+    tax_years: taxYears, survey_date: gv('surveyDate'),
+    officer_email: currentUser.email, officer_unit: gv('officerUnit'),
+    risk_level: gv('riskLevel'), remarks: gv('remarks'),
     updated_at: new Date().toISOString()
   };
 
   const btn = document.getElementById('saveBtn');
-  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> กำลังบันทึก...';
-
-  // Check duplicate TIN (exclude current record if editing)
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> กำลังบันทึก...';
   const editId = btn.dataset.editId;
-  const { data: dup } = await sb.from('nightbiz_survey')
-    .select('id,officer_email')
-    .eq('tin', tin)
-    .neq('id', editId||'00000000-0000-0000-0000-000000000000');
 
-  if (dup && dup.length > 0) {
-    const who = dup[0].officer_email;
-    showAppAlert(`เลขผู้เสียภาษี ${tin} มีในระบบแล้ว (บันทึกโดย ${who}) — ไม่สามารถบันทึกซ้ำได้`, 'error');
-    btn.disabled=false; btn.textContent='บันทึกข้อมูล';
-    return;
+  if (!editId) {
+    const { data: dup } = await sb.from('nightbiz_survey').select('id,officer_email').eq('tin', tin);
+    if (dup && dup.length > 0) {
+      showAppAlert(`เลขผู้เสียภาษี ${tin} มีในระบบแล้ว (บันทึกโดย ${dup[0].officer_email})`,'error');
+      btn.disabled = false; btn.textContent = 'บันทึกข้อมูล'; return;
+    }
+    payload.created_at = new Date().toISOString(); payload.created_by = currentUser.id;
   }
 
-  let error;
-  if (editId) {
-    const res = await sb.from('nightbiz_survey').update(payload).eq('id', editId);
-    error = res.error;
-  } else {
-    payload.created_at = new Date().toISOString();
-    payload.created_by = currentUser.id;
-    const res = await sb.from('nightbiz_survey').insert([payload]);
-    error = res.error;
-  }
+  const { error } = editId
+    ? await sb.from('nightbiz_survey').update(payload).eq('id', editId)
+    : await sb.from('nightbiz_survey').insert([payload]);
 
-  btn.disabled=false; btn.textContent='บันทึกข้อมูล';
-  if (error) { showAppAlert('เกิดข้อผิดพลาด: '+error.message, 'error'); return; }
-  showAppAlert(editId ? 'อัปเดตข้อมูลเรียบร้อยแล้ว' : 'บันทึกข้อมูลเรียบร้อยแล้ว', 'success');
-  clearForm(true);
-  await loadRecords();
+  btn.disabled = false; btn.textContent = 'บันทึกข้อมูล';
+  if (error) { showAppAlert('เกิดข้อผิดพลาด: '+error.message,'error'); return; }
+  showAppAlert(editId ? 'อัปเดตเรียบร้อย' : 'บันทึกเรียบร้อย','success');
+  clearForm(true); await loadRecords();
 }
 
-// ── Load & render list ─────────────────────────────────────
+// ── LOAD / RENDER SURVEY LIST ─────────────────────────────────────────────
 async function loadRecords() {
-  const { data, error } = await sb.from('nightbiz_survey')
-    .select('*').order('created_at', { ascending: false });
-  if (error) { showAppAlert('โหลดข้อมูลไม่สำเร็จ: '+error.message, 'error'); return; }
+  const { data, error } = await sb.from('nightbiz_survey').select('*').order('created_at', { ascending: false });
+  if (error) { showAppAlert('โหลดข้อมูลไม่สำเร็จ: '+error.message,'error'); return; }
   allRecords = data || [];
-  renderList();
-  renderSummaries();
+  renderList(); renderSummaries();
 }
 
 function renderList() {
-  const q   = document.getElementById('searchQ')?.value.toLowerCase()||'';
-  const ft  = document.getElementById('filterType')?.value||'';
-  const fv  = document.getElementById('filterVAT')?.value||'';
-  const fr  = document.getElementById('filterRisk')?.value||'';
-
-  let rows = allRecords.filter(r =>
-    (!q  || r.name.toLowerCase().includes(q) || r.tin.includes(q)) &&
-    (!ft || r.type===ft) && (!fv || r.vat_status===fv) && (!fr || r.risk_level===fr)
+  const q  = document.getElementById('searchQ')?.value?.toLowerCase() || '';
+  const ft = document.getElementById('filterType')?.value || '';
+  const fv = document.getElementById('filterVAT')?.value || '';
+  const fr = document.getElementById('filterRisk')?.value || '';
+  const rows = allRecords.filter(r =>
+    (!q  || r.name.toLowerCase().includes(q) || r.tin.includes(q) || (r.biz_brand_name||'').toLowerCase().includes(q)) &&
+    (!ft || r.type === ft) && (!fv || r.vat_status === fv) && (!fr || r.risk_level === fr)
   );
-
   document.getElementById('s-total').textContent    = allRecords.length;
-  document.getElementById('s-juristic').textContent = allRecords.filter(r=>r.type==='นิติบุคคล').length;
-  document.getElementById('s-personal').textContent = allRecords.filter(r=>r.type==='บุคคลธรรมดา').length;
-  document.getElementById('s-vat').textContent      = allRecords.filter(r=>r.vat_status==='จดทะเบียน VAT').length;
-
+  document.getElementById('s-juristic').textContent = allRecords.filter(r => r.type === 'นิติบุคคล').length;
+  document.getElementById('s-personal').textContent = allRecords.filter(r => r.type === 'บุคคลธรรมดา').length;
+  document.getElementById('s-vat').textContent      = allRecords.filter(r => r.vat_status === 'จดทะเบียน VAT').length;
   const el = document.getElementById('recordList');
-  if (!rows.length) { el.innerHTML='<div class="empty">ไม่พบรายการ</div>'; return; }
-
-  el.innerHTML = rows.map(r=>`
+  if (!rows.length) { el.innerHTML = '<div class="empty">ไม่พบรายการ</div>'; return; }
+  el.innerHTML = rows.map(r => `
     <div class="record-item">
       <div class="record-top">
         <div>
-          <div class="record-name">${r.name}</div>
+          <div class="record-name">${r.name}${r.biz_brand_name ? ` <span style="font-weight:400;font-size:13px;color:var(--text-muted)">(${r.biz_brand_name})</span>` : ''}</div>
           <div class="record-sub">เลขผู้เสียภาษี: ${r.tin} · บันทึกโดย: ${r.officer_email} · ${r.survey_date||''}</div>
         </div>
         <div class="record-actions">
+          <button class="btn btn-success btn-sm" onclick="openModal('${r.id}')">✅ บันทึกงานที่ทำเสร็จ</button>
           <button class="btn btn-outline btn-sm" onclick="editRecord('${r.id}')">แก้ไข</button>
-          <button class="btn btn-sm" style="color:var(--danger);border:1px solid #f5c4be;" onclick="deleteRecord('${r.id}','${r.tin}')">ลบ</button>
+          <button class="btn btn-danger-soft btn-sm" onclick="deleteRecord('${r.id}','${r.tin}')">ลบ</button>
         </div>
       </div>
       <div class="pills">
         <span class="pill ${r.type==='นิติบุคคล'?'pill-juristic':'pill-personal'}">${r.type}</span>
         <span class="pill ${r.vat_status==='จดทะเบียน VAT'?'pill-vat':'pill-novat'}">${r.vat_status||'—'}</span>
-        ${r.biz_type?`<span class="pill pill-novat">${r.biz_type}</span>`:''}
-        ${r.risk_level?`<span class="pill ${r.risk_level==='สูง'?'pill-risk-high':r.risk_level==='ปานกลาง'?'pill-risk-mid':'pill-risk-low'}">ความเสี่ยง: ${r.risk_level}</span>`:''}
-        ${r.officer_unit?`<span class="pill pill-unit">${r.officer_unit}</span>`:''}
+        ${r.biz_type ? `<span class="pill pill-novat">${r.biz_type}</span>` : ''}
+        ${r.risk_level ? `<span class="pill ${r.risk_level==='สูง'?'pill-risk-high':r.risk_level==='ปานกลาง'?'pill-risk-mid':'pill-risk-low'}">ความเสี่ยง: ${r.risk_level}</span>` : ''}
+        ${r.officer_unit ? `<span class="pill pill-unit">${r.officer_unit}</span>` : ''}
       </div>
-      <div class="record-addr">${r.subdistrict} ${r.district} ${r.province}</div>
+      <div class="record-addr">${r.subdistrict||''} ${r.district||''} ${r.province||''}</div>
     </div>`).join('');
 }
 
-function renderSummaries() {
-  const cnt = (arr, key) => arr.reduce((a,r)=>{a[r[key]||'ไม่ระบุ']=(a[r[key]||'ไม่ระบุ']||0)+1;return a;},{});
-
-  const bizC  = cnt(allRecords,'biz_type');
-  const vatC  = cnt(allRecords,'vat_status');
-  const riskC = cnt(allRecords,'risk_level');
-
-  const rows = (obj) => Object.entries(obj).sort((a,b)=>b[1]-a[1])
-    .map(([k,v])=>`<div class="exp-row"><span>${k}</span><span style="font-weight:600">${v} ราย</span></div>`).join('');
-
-  document.getElementById('bizSummary').innerHTML  = rows(bizC)  || '<p style="font-size:13px;color:var(--text-muted)">ยังไม่มีข้อมูล</p>';
-  document.getElementById('vatSummary').innerHTML  = rows(vatC)  || '<p style="font-size:13px;color:var(--text-muted)">ยังไม่มีข้อมูล</p>';
-  document.getElementById('riskSummary').innerHTML = rows(riskC) || '<p style="font-size:13px;color:var(--text-muted)">ยังไม่มีข้อมูล</p>';
-}
-
-// ── Edit / Delete ──────────────────────────────────────────
 function editRecord(id) {
-  const r = allRecords.find(x=>x.id===id);
-  if (!r) return;
+  const r = allRecords.find(x => x.id === id); if (!r) return;
   switchTab('input', document.querySelectorAll('.tab-btn')[0]);
-  setTimeout(()=>{
-    document.querySelector(`input[name="taxpayerType"][value="${r.type}"]`).checked=true;
-    onTypeChange();
-    const fm = {tin:'tin',bizName:'name',regNumber:'reg_number',address:'address',
-      subdistrict:'subdistrict',district:'district',province:'province',
-      postalCode:'postal_code',locationNote:'location_note',
-      vatNumber:'vat_number',vatRegDate:'vat_reg_date',vatSales:'vat_sales',
-      officerUnit:'officer_unit',remarks:'remarks',surveyDate:'survey_date'};
-    Object.entries(fm).forEach(([fid,key])=>{
-      const el=document.getElementById(fid); if(el&&r[key]!==undefined) el.value=r[key]||'';
-    });
-    document.getElementById('bizType').value = r.biz_type||'';
-    document.getElementById('vatPeriod').value = r.vat_period||'';
-    document.getElementById('riskLevel').value = r.risk_level||'';
-    const vr=document.querySelector(`input[name="vatStatus"][value="${r.vat_status}"]`);
-    if(vr){vr.checked=true;onVATChange(vr);}
-    document.getElementById('hasCIT').checked=r.has_cit;
-    document.getElementById('hasPIT').checked=r.has_pit;
-    document.getElementById('hasWT').checked=r.has_wt;
+  setTimeout(() => {
+    document.querySelector(`input[name="taxpayerType"][value="${r.type}"]`).checked = true; onTypeChange();
+    const fm = { tin:'tin', bizName:'name', bizBrandName:'biz_brand_name', regNumber:'reg_number',
+      address:'address', subdistrict:'subdistrict', district:'district', province:'province',
+      postalCode:'postal_code', locationNote:'location_note', vatNumber:'vat_number',
+      vatRegDate:'vat_reg_date', vatSales:'vat_sales', officerUnit:'officer_unit',
+      remarks:'remarks', surveyDate:'survey_date' };
+    Object.entries(fm).forEach(([fid, key]) => { const e = document.getElementById(fid); if (e && r[key] !== undefined) e.value = r[key] || ''; });
+    document.getElementById('bizType').value   = r.biz_type || '';
+    document.getElementById('vatPeriod').value = r.vat_period || '';
+    document.getElementById('riskLevel').value = r.risk_level || '';
+    const vr = document.querySelector(`input[name="vatStatus"][value="${r.vat_status}"]`);
+    if (vr) { vr.checked = true; onVATChange(vr); }
+    document.getElementById('hasCIT').checked = r.has_cit;
+    document.getElementById('hasPIT').checked = r.has_pit;
+    document.getElementById('hasWT').checked  = r.has_wt;
     renderTaxYears();
-    setTimeout(()=>{
-      (r.tax_years||[]).forEach(ty=>{
-        const ie=document.getElementById('inc_'+ty.year); if(ie) ie.value=ty.income||'';
-        const te=document.getElementById('tax_'+ty.year); if(te) te.value=ty.tax||'';
-        const se=document.getElementById('tst_'+ty.year); if(se) se.value=ty.status||'';
+    setTimeout(() => {
+      (r.tax_years || []).forEach(ty => {
+        const ie = document.getElementById('inc_'+ty.year); if (ie) ie.value = ty.income || '';
+        const te = document.getElementById('tax_'+ty.year); if (te) te.value = ty.tax || '';
+        const se = document.getElementById('tst_'+ty.year); if (se) se.value = ty.status || '';
       });
-    },50);
-    document.getElementById('saveBtn').dataset.editId=id;
+    }, 50);
+    document.getElementById('saveBtn').dataset.editId = id;
     showAppAlert('กำลังแก้ไขข้อมูล: '+r.name,'warning');
-    window.scrollTo({top:0,behavior:'smooth'});
-  },50);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 50);
 }
 
-async function deleteRecord(id,tin) {
-  if (!confirm(`ต้องการลบข้อมูลเลขผู้เสียภาษี ${tin} หรือไม่?\nการลบไม่สามารถกู้คืนได้`)) return;
-  const { error } = await sb.from('nightbiz_survey').delete().eq('id',id);
+async function deleteRecord(id, tin) {
+  if (!confirm(`ต้องการลบข้อมูลเลขผู้เสียภาษี ${tin} หรือไม่?`)) return;
+  const { error } = await sb.from('nightbiz_survey').delete().eq('id', id);
   if (error) { showAppAlert('ลบไม่สำเร็จ: '+error.message,'error'); return; }
-  showAppAlert('ลบข้อมูลเรียบร้อยแล้ว','success');
-  await loadRecords();
+  showAppAlert('ลบเรียบร้อย','success'); await loadRecords();
 }
 
-// ── Export CSV ─────────────────────────────────────────────
-function buildCSV(data) {
-  const h = ['ลำดับ','ประเภท','เลขผู้เสียภาษี','ชื่อ','เลขทะเบียนนิติบุคคล','ประเภทกิจการ',
-    'ที่อยู่','แขวง','เขต','จังหวัด','รหัสไปรษณีย์','สถานะ VAT','เลขทะเบียน VAT',
-    'วันที่จดทะเบียน VAT','ยอดขาย VAT','ภาษีนิติบุคคล','ภาษีบุคคลธรรมดา','ภาษีหัก ณ ที่จ่าย',
-    'วันที่สำรวจ','เจ้าหน้าที่','สังกัด','ความเสี่ยง','หมายเหตุ'];
-  const rows = data.map((r,i)=>[i+1,r.type,r.tin,r.name,r.reg_number,r.biz_type,
-    r.address,r.subdistrict,r.district,r.province,r.postal_code,
-    r.vat_status,r.vat_number,r.vat_reg_date,r.vat_sales,
-    r.has_cit?'มี':'ไม่มี',r.has_pit?'มี':'ไม่มี',r.has_wt?'มี':'ไม่มี',
-    r.survey_date,r.officer_email,r.officer_unit,r.risk_level,r.remarks
-  ].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));
-  return '\uFEFF'+[h.join(','),...rows].join('\n');
+// ── COMPLETED WORK ────────────────────────────────────────────────────────
+async function loadCompleted() {
+  const { data, error } = await sb
+    .from('nightbiz_completed')
+    .select('*, nightbiz_survey(name, tin, biz_brand_name, type)')
+    .order('pay_date', { ascending: false });
+
+  if (error) {
+    document.getElementById('compTbody').innerHTML =
+      `<tr><td colspan="27" class="empty" style="color:var(--danger)">
+        ⚠️ ยังไม่มีตาราง nightbiz_completed — กรุณารัน SQL สร้างตารางใน Supabase ก่อน
+      </td></tr>`;
+    return;
+  }
+  compRecords = data || [];
+  document.getElementById('comp-count').textContent = compRecords.length;
+  renderCompTable();
 }
 
-function exportCSV() {
-  if (!allRecords.length){showAppAlert('ไม่มีข้อมูล','error');return;}
-  dl('nightbiz_all_'+Date.now()+'.csv', buildCSV(allRecords), 'text/csv;charset=utf-8');
-}
-function exportCSVFiltered() {
-  const q=document.getElementById('searchQ')?.value.toLowerCase()||'';
-  const ft=document.getElementById('filterType')?.value||'';
-  const fv=document.getElementById('filterVAT')?.value||'';
-  const fr=document.getElementById('filterRisk')?.value||'';
-  const filtered=allRecords.filter(r=>
-    (!q||r.name.toLowerCase().includes(q)||r.tin.includes(q))&&
-    (!ft||r.type===ft)&&(!fv||r.vat_status===fv)&&(!fr||r.risk_level===fr));
-  if(!filtered.length){showAppAlert('ไม่มีข้อมูลที่กรอง','error');return;}
-  dl('nightbiz_filtered_'+Date.now()+'.csv', buildCSV(filtered), 'text/csv;charset=utf-8');
-}
-function dl(name,content,type){
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([content],{type}));
-  a.download=name; a.click();
+function renderCompTable() {
+  const tbody = document.getElementById('compTbody');
+  if (!compRecords.length) { tbody.innerHTML = '<tr><td colspan="27" class="empty">ยังไม่มีรายการงานที่ทำเสร็จ</td></tr>'; return; }
+
+  const fmt = n => n ? Number(n).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—';
+  const grandTotal = r => [
+    r.pit_tax, r.pit_fine, r.pit_sur, r.pit_pen,
+    r.cit_tax, r.cit_fine, r.cit_sur, r.cit_pen,
+    r.vat_tax, r.vat_fine, r.vat_sur, r.vat_pen,
+    r.sbt_tax, r.sbt_fine, r.sbt_sur, r.sbt_pen,
+    r.stm_tax, r.stm_fine, r.stm_sur, r.stm_pen
+  ].reduce((a, b) => a + (parseFloat(b) || 0), 0);
+
+  tbody.innerHTML = compRecords.map((r, i) => `
+    <tr>
+      <td class="ctr">${i+1}</td>
+      <td>${r.nightbiz_survey?.name || '—'}</td>
+      <td class="ctr" style="font-family:monospace;font-size:11px">${r.nightbiz_survey?.tin || '—'}</td>
+      <td>${r.nightbiz_survey?.biz_brand_name || '—'}</td>
+      <td class="ctr">${r.pay_date || '—'}</td>
+      <td class="num tax-col">${fmt(r.pit_tax)}</td><td class="num tax-col">${fmt(r.pit_fine)}</td><td class="num tax-col">${fmt(r.pit_sur)}</td><td class="num tax-col">${fmt(r.pit_pen)}</td>
+      <td class="num tax-col">${fmt(r.cit_tax)}</td><td class="num tax-col">${fmt(r.cit_fine)}</td><td class="num tax-col">${fmt(r.cit_sur)}</td><td class="num tax-col">${fmt(r.cit_pen)}</td>
+      <td class="num tax-col">${fmt(r.vat_tax)}</td><td class="num tax-col">${fmt(r.vat_fine)}</td><td class="num tax-col">${fmt(r.vat_sur)}</td><td class="num tax-col">${fmt(r.vat_pen)}</td>
+      <td class="num tax-col">${fmt(r.sbt_tax)}</td><td class="num tax-col">${fmt(r.sbt_fine)}</td><td class="num tax-col">${fmt(r.sbt_sur)}</td><td class="num tax-col">${fmt(r.sbt_pen)}</td>
+      <td class="num tax-col">${fmt(r.stm_tax)}</td><td class="num tax-col">${fmt(r.stm_fine)}</td><td class="num tax-col">${fmt(r.stm_sur)}</td><td class="num tax-col">${fmt(r.stm_pen)}</td>
+      <td class="total-col">${fmt(grandTotal(r))}</td>
+      <td class="ctr"><button class="btn btn-danger-soft btn-sm" onclick="deleteCompleted('${r.id}')">ลบ</button></td>
+    </tr>`).join('');
 }
 
-// ── UI helpers ─────────────────────────────────────────────
+function searchComp() {
+  const q  = document.getElementById('compQ').value.toLowerCase().trim();
+  const ft = document.getElementById('compFilterType').value;
+  const el = document.getElementById('compSearchResult');
+  if (!q && !ft) { el.innerHTML = ''; return; }
+  const matched = allRecords.filter(r =>
+    (!q  || r.tin.includes(q) || r.name.toLowerCase().includes(q) || (r.biz_brand_name||'').toLowerCase().includes(q)) &&
+    (!ft || r.type === ft)
+  );
+  if (!matched.length) { el.innerHTML = '<div class="alert alert-warning">ไม่พบรายการที่ค้นหา</div>'; return; }
+  el.innerHTML = `<div class="card"><div class="card-title"><span class="dot"></span>ผลการค้นหา (${matched.length} รายการ)</div>` +
+    matched.map(r => `
+      <div class="record-item">
+        <div class="record-top">
+          <div>
+            <div class="record-name">${r.name}${r.biz_brand_name?` <span style="font-size:13px;font-weight:400;color:var(--text-muted)">(${r.biz_brand_name})</span>`:''}</div>
+            <div class="record-sub">เลขผู้เสียภาษี: ${r.tin} · ${r.type}</div>
+          </div>
+          <button class="btn btn-success btn-sm" onclick="openModal('${r.id}')">✅ บันทึกงานที่ทำเสร็จ</button>
+        </div>
+        <div class="pills">
+          <span class="pill ${r.type==='นิติบุคคล'?'pill-juristic':'pill-personal'}">${r.type}</span>
+          ${r.biz_type?`<span class="pill pill-novat">${r.biz_type}</span>`:''}
+          ${r.vat_status?`<span class="pill ${r.vat_status==='จดทะเบียน VAT'?'pill-vat':'pill-novat'}">${r.vat_status}</span>`:''}
+          ${r.officer_unit?`<span class="pill pill-unit">${r.officer_unit}</span>`:''}
+        </div>
+      </div>`).join('') + '</div>';
+}
+
+function openModal(surveyId, editData = null) {
+  const rec = allRecords.find(r => r.id === surveyId); if (!rec) return;
+  document.getElementById('modalTitle').textContent = editData ? 'แก้ไขงานที่ทำเสร็จ' : 'บันทึกงานที่ทำเสร็จ';
+  document.getElementById('modalInfoBand').innerHTML = `
+    <span><b>ชื่อผู้ประกอบการ:</b> ${rec.name}</span>
+    <span><b>เลขผู้เสียภาษี:</b> <span style="font-family:monospace">${rec.tin}</span></span>
+    <span><b>ชื่อสถานประกอบการ:</b> ${rec.biz_brand_name||'—'}</span>
+    <span><b>ประเภท:</b> ${rec.type}</span>`;
+  document.getElementById('cm_surveyId').value = surveyId;
+  document.getElementById('cm_editId').value   = editData?.id || '';
+  document.getElementById('cm_payDate').value  = editData?.pay_date || new Date().toISOString().split('T')[0];
+  document.getElementById('cm_remarks').value  = editData?.remarks || '';
+  const fields = ['pit_tax','pit_fine','pit_sur','pit_pen','cit_tax','cit_fine','cit_sur','cit_pen',
+    'vat_tax','vat_fine','vat_sur','vat_pen','sbt_tax','sbt_fine','sbt_sur','sbt_pen','stm_tax','stm_fine','stm_sur','stm_pen'];
+  fields.forEach(f => { const e = document.getElementById('cm_'+f); if (e) e.value = editData ? (editData[f] || '') : ''; });
+  document.getElementById('compModal').classList.remove('hidden');
+}
+
+function closeModal() { document.getElementById('compModal').classList.add('hidden'); }
+
+async function saveCompleted() {
+  const surveyId = document.getElementById('cm_surveyId').value;
+  const payDate  = document.getElementById('cm_payDate').value;
+  if (!payDate) { showAppAlert('กรุณาเลือกวันที่ชำระภาษี','error'); return; }
+
+  const payload = {
+    survey_id: surveyId, pay_date: payDate,
+    pit_tax: gn('cm_pit_tax'), pit_fine: gn('cm_pit_fine'), pit_sur: gn('cm_pit_sur'), pit_pen: gn('cm_pit_pen'),
+    cit_tax: gn('cm_cit_tax'), cit_fine: gn('cm_cit_fine'), cit_sur: gn('cm_cit_sur'), cit_pen: gn('cm_cit_pen'),
+    vat_tax: gn('cm_vat_tax'), vat_fine: gn('cm_vat_fine'), vat_sur: gn('cm_vat_sur'), vat_pen: gn('cm_vat_pen'),
+    sbt_tax: gn('cm_sbt_tax'), sbt_fine: gn('cm_sbt_fine'), sbt_sur: gn('cm_sbt_sur'), sbt_pen: gn('cm_sbt_pen'),
+    stm_tax: gn('cm_stm_tax'), stm_fine: gn('cm_stm_fine'), stm_sur: gn('cm_stm_sur'), stm_pen: gn('cm_stm_pen'),
+    remarks: gv('cm_remarks'), officer_email: currentUser.email,
+    updated_at: new Date().toISOString()
+  };
+  const editId = document.getElementById('cm_editId').value;
+  let error;
+  if (editId) {
+    ({ error } = await sb.from('nightbiz_completed').update(payload).eq('id', editId));
+  } else {
+    payload.created_at = new Date().toISOString();
+    ({ error } = await sb.from('nightbiz_completed').insert([payload]));
+  }
+  if (error) { showAppAlert('บันทึกไม่สำเร็จ: '+error.message,'error'); return; }
+  showAppAlert('บันทึกงานที่ทำเสร็จเรียบร้อย','success');
+  closeModal(); await loadCompleted();
+}
+
+async function deleteCompleted(id) {
+  if (!confirm('ต้องการลบรายการนี้หรือไม่?')) return;
+  const { error } = await sb.from('nightbiz_completed').delete().eq('id', id);
+  if (error) { showAppAlert('ลบไม่สำเร็จ: '+error.message,'error'); return; }
+  showAppAlert('ลบเรียบร้อย','success'); await loadCompleted();
+}
+
+// ── SUMMARIES ─────────────────────────────────────────────────────────────
+function renderSummaries() {
+  const cnt = (arr, key) => arr.reduce((a, r) => { a[r[key]||'ไม่ระบุ'] = (a[r[key]||'ไม่ระบุ']||0)+1; return a; }, {});
+  const rows = obj => Object.entries(obj).sort((a,b) => b[1]-a[1])
+    .map(([k,v]) => `<div class="exp-row"><span>${k}</span><span style="font-weight:600">${v} ราย</span></div>`).join('');
+  document.getElementById('bizSummary').innerHTML  = rows(cnt(allRecords,'biz_type'))  || '<p style="font-size:13px;color:var(--text-muted)">ยังไม่มีข้อมูล</p>';
+  document.getElementById('vatSummary').innerHTML  = rows(cnt(allRecords,'vat_status')) || '<p style="font-size:13px;color:var(--text-muted)">ยังไม่มีข้อมูล</p>';
+  document.getElementById('riskSummary').innerHTML = rows(cnt(allRecords,'risk_level')) || '<p style="font-size:13px;color:var(--text-muted)">ยังไม่มีข้อมูล</p>';
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────
+function exportSurveyCSV() {
+  if (!allRecords.length) { showAppAlert('ไม่มีข้อมูล','error'); return; }
+  const h = ['ลำดับ','ประเภท','เลขผู้เสียภาษี','ชื่อ','ชื่อสถานประกอบการ','ประเภทกิจการ','ที่อยู่','แขวง','เขต','จังหวัด','สถานะ VAT','วันที่สำรวจ','เจ้าหน้าที่','สังกัด','ความเสี่ยง','หมายเหตุ'];
+  const rows = allRecords.map((r,i) => [i+1,r.type,r.tin,r.name,r.biz_brand_name,r.biz_type,r.address,r.subdistrict,r.district,r.province,r.vat_status,r.survey_date,r.officer_email,r.officer_unit,r.risk_level,r.remarks]
+    .map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(','));
+  dl('nightbiz_survey_'+Date.now()+'.csv', '\uFEFF'+[h.join(','),...rows].join('\n'));
+}
+
+function exportCompCSV() {
+  if (!compRecords.length) { showAppAlert('ยังไม่มีงานที่ทำเสร็จ','error'); return; }
+  const h = ['ลำดับ','ชื่อผู้ประกอบการ','เลขประจำตัวผู้เสียภาษี','ชื่อสถานประกอบการ','วันที่ชำระภาษี',
+    'ภษ.บุคคลธรรมดา-ภาษี','ภษ.บุคคลธรรมดา-เบี้ยปรับ','ภษ.บุคคลธรรมดา-เงินเพิ่ม','ภษ.บุคคลธรรมดา-ค่าปรับ',
+    'ภษ.นิติบุคคล-ภาษี','ภษ.นิติบุคคล-เบี้ยปรับ','ภษ.นิติบุคคล-เงินเพิ่ม','ภษ.นิติบุคคล-ค่าปรับ',
+    'VAT-ภาษี','VAT-เบี้ยปรับ','VAT-เงินเพิ่ม','VAT-ค่าปรับ',
+    'ธุรกิจเฉพาะ-ภาษี','ธุรกิจเฉพาะ-เบี้ยปรับ','ธุรกิจเฉพาะ-เงินเพิ่ม','ธุรกิจเฉพาะ-ค่าปรับ',
+    'อากรแสตมป์-ภาษี','อากรแสตมป์-เบี้ยปรับ','อากรแสตมป์-เงินเพิ่ม','อากรแสตมป์-ค่าปรับ','รวมทั้งสิ้น','หมายเหตุ'];
+  const gt = r => [r.pit_tax,r.pit_fine,r.pit_sur,r.pit_pen,r.cit_tax,r.cit_fine,r.cit_sur,r.cit_pen,
+    r.vat_tax,r.vat_fine,r.vat_sur,r.vat_pen,r.sbt_tax,r.sbt_fine,r.sbt_sur,r.sbt_pen,
+    r.stm_tax,r.stm_fine,r.stm_sur,r.stm_pen].reduce((a,b)=>a+(parseFloat(b)||0),0);
+  const rows = compRecords.map((r,i) => [i+1,
+    r.nightbiz_survey?.name, r.nightbiz_survey?.tin, r.nightbiz_survey?.biz_brand_name, r.pay_date,
+    r.pit_tax,r.pit_fine,r.pit_sur,r.pit_pen,
+    r.cit_tax,r.cit_fine,r.cit_sur,r.cit_pen,
+    r.vat_tax,r.vat_fine,r.vat_sur,r.vat_pen,
+    r.sbt_tax,r.sbt_fine,r.sbt_sur,r.sbt_pen,
+    r.stm_tax,r.stm_fine,r.stm_sur,r.stm_pen, gt(r), r.remarks
+  ].map(v => `"${String(v||'0').replace(/"/g,'""')}"`).join(','));
+  dl('nightbiz_completed_'+Date.now()+'.csv', '\uFEFF'+[h.join(','),...rows].join('\n'));
+}
+
+function dl(name, content) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8' }));
+  a.download = name; a.click();
+}
+
+// ── UI HELPERS ────────────────────────────────────────────────────────────
 function switchTab(name, el) {
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
-  if(el) el.classList.add('active');
-  if(name==='list'||name==='export') loadRecords();
+  if (el) el.classList.add('active');
+  if (name === 'list' || name === 'export') loadRecords();
+  if (name === 'completed') { loadRecords(); loadCompleted(); }
+}
+function showLoginAlert(msg, type) { document.getElementById('loginAlert').innerHTML = `<div class="alert alert-${type}" style="margin-bottom:1rem">${msg}</div>`; }
+function showAppAlert(msg, type) {
+  const a = document.getElementById('appAlert');
+  a.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+  if (type === 'success') setTimeout(() => a.innerHTML = '', 4000);
 }
 
-function showLoginAlert(msg,type){
-  document.getElementById('loginAlert').innerHTML=`<div class="alert alert-${type}" style="margin-bottom:1rem">${msg}</div>`;
-}
-function showAppAlert(msg,type){
-  const a=document.getElementById('appAlert');
-  a.innerHTML=`<div class="alert alert-${type}">${msg}</div>`;
-  if(type==='success') setTimeout(()=>a.innerHTML='',4000);
-}
-
-// ── Boot ───────────────────────────────────────────────────
 checkSession();
 </script>
 </body>
