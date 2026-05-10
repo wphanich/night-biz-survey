@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โครงการสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กรุงเทพมหานคร 13</title>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#1a3a5c; --primary-light:#e8f0f8; --accent:#c8a84b; --accent-light:#fdf6e3;
+  --danger:#c0392b; --danger-light:#fdf0ee; --success:#1a6b3a; --success-light:#eaf5ee;
+  --warning:#b7770d; --warning-light:#fef9ec; --border:#d0d9e4; --border-light:#e8edf3;
+  --text:#1c2b3a; --text-muted:#6b7e90; --bg:#f4f6f9; --surface:#ffffff;
+  --radius:8px; --radius-lg:12px; --shadow:0 1px 3px rgba(26,58,92,.08),0 1px 2px rgba(26,58,92,.04);
+  --shadow-md:0 4px 16px rgba(26,58,92,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:var(--text);line-height:1.6}
+
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f2540,#1a3a5c,#1e4a72);padding:1rem}
+.login-card{background:var(--surface);border-radius:var(--radius-lg);padding:2.5rem 2rem;width:100%;max-width:400px;box-shadow:var(--shadow-md)}
+.login-logo{text-align:center;margin-bottom:2rem}
+.login-logo .emblem{width:64px;height:64px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:28px}
+.login-logo h1{font-size:17px;font-weight:600;color:var(--primary)}
+.login-logo p{font-size:13px;color:var(--text-muted);margin-top:4px}
+.login-divider{height:3px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:2px;margin-bottom:1.75rem}
+
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:13px;font-weight:500;color:var(--text-muted);margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;font-size:14px;font-family:'Sarabun',sans-serif;background:var(--surface);color:var(--text);transition:border-color .15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,58,92,.08)}
+.form-group textarea{resize:vertical;min-height:80px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:var(--radius);font-size:14px;font-weight:500;font-family:'Sarabun',sans-serif;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.btn-primary{background:var(--primary);color:#fff;border-color:var(--primary)}.btn-primary:hover{background:#163352}
+.btn-outline{background:transparent;color:var(--primary);border-color:var(--border)}.btn-outline:hover{background:var(--primary-light)}
+.btn-success{background:var(--success);color:#fff;border-color:var(--success)}.btn-success:hover{opacity:.88}
+.btn-sm{padding:6px 12px;font-size:13px}
+.btn-full{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.required{color:var(--danger)}
+
+.app{display:none;min-height:100vh}
+.topbar{background:var(--primary);color:#fff;padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.topbar-brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.user-badge{font-size:12px;color:rgba(255,255,255,.75);background:rgba(255,255,255,.1);padding:4px 12px;border-radius:99px}
+.btn-logout{background:rgba(255,255,255,.12);color:#fff;border:none;padding:6px 14px;border-radius:var(--radius);font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif}
+.btn-logout:hover{background:rgba(255,255,255,.22)}
+
+.tabs-bar{background:var(--surface);border-bottom:1px solid var(--border-light);padding:0 1.5rem;display:flex;position:sticky;top:56px;z-index:99;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow-x:auto}
+.tab-btn{padding:14px 18px;font-size:13px;font-weight:500;font-family:'Sarabun',sans-serif;cursor:pointer;border:none;background:none;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tab-btn:hover:not(.active){color:var(--text)}
+
+.main-content{max-width:1100px;margin:0 auto;padding:1.5rem}
+.panel{display:none}.panel.active{display:block}
+
+.card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);padding:1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.card-title{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.25rem;padding-bottom:10px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card-title .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+.search-box{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.search-box h3{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:.75rem}
+.search-input-row{display:flex;gap:8px;flex-wrap:wrap}
+.search-input-row input{flex:1;min-width:220px}
+
+.info-band{background:var(--primary-light);border-radius:var(--radius);padding:10px 14px;margin-bottom:1.25rem;font-size:13px;display:flex;gap:24px;flex-wrap:wrap}
+.info-band b{color:var(--primary)}
+
+.tax-input-table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+.tax-input-table th{background:var(--primary);color:#fff;padding:8px 10px;font-weight:500;text-align:center}
+.tax-input-table td{padding:6px 6px;border-bottom:1px solid var(--border-light)}
+.tax-input-table tr:last-child td{border-bottom:none}
+.tax-input-table tr:nth-child(even) td{background:#fafcff}
+.tax-input-table td:first-child{font-weight:500;padding-left:10px;white-space:nowrap}
+.tax-input-table input{width:100%;text-align:right;border:1px solid var(--border);border-radius:4px;padding:5px 7px;font-size:13px;font-family:'Sarabun',sans-serif}
+
+.actions{display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap}
+.alert{padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;animation:slideIn .2s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.alert-success{background:var(--success-light);color:var(--success);border:1px solid #b6e0c6}
+.alert-error{background:var(--danger-light);color:var(--danger);border:1px solid #f5c4be}
+.alert-warning{background:var(--warning-light);color:var(--warning);border:1px solid #f5dfa0}
+
+.record-item{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:10px;box-shadow:var(--shadow);transition:box-shadow .15s;cursor:pointer}
+.record-item:hover{box-shadow:var(--shadow-md)}
+.record-name{font-size:15px;font-weight:600;color:var(--primary)}
+.record-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+
+.tbl-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border-light)}
+.work-table{width:100%;border-collapse:collapse;font-size:12px;min-width:1400px}
+.work-table th{background:var(--primary);color:#fff;padding:9px 8px;text-align:center;font-weight:500;border-right:1px solid rgba(255,255,255,.15)}
+.work-table th:last-child{border-right:none}
+.work-table td{padding:8px 8px;border-bottom:1px solid var(--border-light);border-right:1px solid var(--border-light)}
+.work-table td:last-child{border-right:none}
+.work-table tr:hover td{background:#f0f6ff}
+.work-table .num{text-align:right;font-family:monospace;font-size:12px}
+.work-table .ctr{text-align:center}
+.work-table .tax-col{background:#fffbf0}
+
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{text-align:center;padding:2rem;color:var(--text-muted);font-size:13px}
+.empty{text-align:center;padding:3rem 1rem;color:var(--text-muted)}
+.hidden{display:none!important}
+
+@media print {
+  .topbar, .tabs-bar, .no-print { display: none; }
+  body { margin: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="emblem">🏛️</div>
+      <h1>กรมสรรพากร</h1>
+      <p>สรรพากรพื้นที่กรุงเทพมหานคร 13<br>โครงการสำรวจธุรกิจประกอบการกลางคืน</p>
+    </div>
+    <div class="login-divider"></div>
+    <div id="loginAlert"></div>
+    <div class="form-group">
+      <label>อีเมลเจ้าหน้าที่</label>
+      <input type="email" id="loginEmail" placeholder="officer@rd.go.th">
+    </div>
+    <div class="form-group">
+      <label>รหัสผ่าน</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn btn-primary btn-full" id="loginBtn" onclick="doLogin()">เข้าสู่ระบบ</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="app">
+  <div class="topbar">
+    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กทม.13</div>
+    <div class="topbar-right">
+      <span class="user-badge" id="userBadge">—</span>
+      <button class="btn-logout" onclick="doLogout()">ออกจากระบบ</button>
+    </div>
+  </div>
+
+  <div class="tabs-bar">
+    <button class="tab-btn active" onclick="switchTab('input',this)">📋 บันทึกข้อมูล</button>
+    <button class="tab-btn" onclick="switchTab('list',this)">📂 รายการทั้งหมด</button>
+    <button class="tab-btn" onclick="switchTab('completed-entry',this)">✍️ บันทึกงานเสร็จ</button>
+    <button class="tab-btn" onclick="switchTab('completed-report',this)">📊 รายงานงานเสร็จ</button>
+    <button class="tab-btn" onclick="switchTab('export',this)">📥 ส่งออก</button>
+  </div>
+
+  <div class="main-content">
+    <div id="appAlert"></div>
+
+    <!-- INPUT PANEL -->
+    <div id="panel-input" class="panel active">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>ข้อมูลพื้นฐาน</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label>ประเภทผู้เสียภาษี <span class="required">*</span></label>
+            <div style="display:flex;gap:1.25rem;margin-top:4px">
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="taxpayerType" value="นิติบุคคล" onchange="onTypeChange()" checked> นิติบุคคล</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="taxpayerType" value="บุคคลธรรมดา" onchange="onTypeChange()"> บุคคลธรรมดา</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>เลขประจำตัวผู้เสียภาษี 13 หลัก <span class="required">*</span></label>
+            <input type="text" id="tin" maxlength="13" placeholder="0000000000000" oninput="this.value=this.value.replace(/\D/g,'').slice(0,13)">
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label id="nameLabel">ชื่อนิติบุคคล <span class="required">*</span></label>
+            <input type="text" id="bizName" placeholder="ชื่อบริษัท / ห้างหุ้นส่วน / ชื่อ-นามสกุล">
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label>ชื่อสถานประกอบการ</label>
+            <input type="text" id="bizBrandName" placeholder="ชื่อร้าน / ชื่อที่เรียกทั่วไป">
+          </div>
+          <div class="form-group" id="regNumGroup">
+            <label>เลขทะเบียนนิติบุคคล</label>
+            <input type="text" id="regNumber" placeholder="0XXXXXXXXXXXXXXXXX">
+          </div>
+          <div class="form-group">
+            <label>ประเภทกิจการ <span class="required">*</span></label>
+            <select id="bizType" onchange="onBizTypeChange()">
+              <option value="">-- เลือกประเภทกิจการ --</option>
+              <option>สถานบันเทิง (ไนต์คลับ / ดิสโก้เทก)</option>
+              <option>คาราโอเกะ / อาหารและคาราโอเกะ</option>
+              <option>บาร์ / พับ / เลาจน์</option>
+              <option>ร้านอาหารกลางคืน</option>
+              <option>สปา / นวดแผนไทย</option>
+              <option>สถานบริการ (พระราชบัญญัติ)</option>
+              <option>โรงแรมที่พัก</option>
+              <option>อื่น ๆ</option>
+            </select>
+          </div>
+          <div class="form-group" id="otherBizGroup" style="grid-column:1/-1;display:none">
+            <label>ระบุประเภทกิจการ (อื่น ๆ)</label>
+            <input type="text" id="otherBizType" placeholder="ระบุ...">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>สถานที่ตั้งกิจการ</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group" style="grid-column:1/-1">
+            <label>ที่อยู่ <span class="required">*</span></label>
+            <input type="text" id="address" placeholder="บ้านเลขที่ / อาคาร / ชั้น / ซอย / ถนน">
+          </div>
+          <div class="form-group"><label>แขวง <span class="required">*</span></label><input type="text" id="subdistrict"></div>
+          <div class="form-group"><label>เขต <span class="required">*</span></label><input type="text" id="district"></div>
+          <div class="form-group"><label>จังหวัด</label><input type="text" id="province" value="กรุงเทพมหานคร"></div>
+          <div class="form-group"><label>รหัสไปรษณีย์</label><input type="text" id="postalCode" maxlength="5"></div>
+          <div class="form-group" style="grid-column:1/-1"><label>หมายเหตุสถานที่</label><input type="text" id="locationNote"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>ภาษีมูลค่าเพิ่ม (VAT)</div>
+        <div class="form-group">
+          <label>สถานะการจดทะเบียน VAT <span class="required">*</span></label>
+          <div style="display:flex;gap:1.25rem;margin-top:4px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="vatStatus" value="จดทะเบียน VAT" onchange="onVATChange(this)"> จดทะเบียน VAT</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="vatStatus" value="ไม่จดทะเบียน VAT" onchange="onVATChange(this)"> ไม่จดทะเบียน VAT</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="vatStatus" value="ถูกถอนทะเบียน" onchange="onVATChange(this)"> ถูกถอนทะเบียน</label>
+          </div>
+        </div>
+        <div id="vatDetail" style="background:var(--primary-light);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-top:10px;display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="form-group"><label>เลขทะเบียน VAT</label><input type="text" id="vatNumber"></div>
+            <div class="form-group"><label>วันที่จดทะเบียน VAT</label><input type="date" id="vatRegDate"></div>
+            <div class="form-group"><label>รอบการยื่น (ภ.พ.30)</label><select id="vatPeriod"><option>รายเดือน</option><option>รายไตรมาส</option></select></div>
+            <div class="form-group"><label>ยอดขาย VAT ล่าสุด (บาท)</label><input type="number" id="vatSales" placeholder="0"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>ข้อมูลเจ้าหน้าที่</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group"><label>วันที่สำรวจ <span class="required">*</span></label><input type="date" id="surveyDate"></div>
+          <div class="form-group"><label>สังกัด / ฝ่าย</label><input type="text" id="officerUnit"></div>
+          <div class="form-group">
+            <label>ลำดับความเสี่ยง</label>
+            <select id="riskLevel"><option value="">-- เลือก --</option><option>สูง</option><option>ปานกลาง</option><option>ต่ำ</option></select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1"><label>หมายเหตุ</label><textarea id="remarks"></textarea></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="saveRecord()">บันทึกข้อมูล</button>
+        <button class="btn btn-outline" onclick="clearForm()">ล้างแบบฟอร์ม</button>
+      </div>
+    </div>
+
+    <!-- LIST PANEL -->
+    <div id="panel-list" class="panel">
+      <div style="color:var(--text);margin-bottom:1rem;font-size:13px">
+        ทั้งหมด: <b id="s-total">—</b> | นิติบุคคล: <b id="s-juristic">—</b> | บุคคลธรรมดา: <b id="s-personal">—</b> | จดทะเบียน VAT: <b id="s-vat">—</b>
+      </div>
+      <div id="recordList"><div class="loading">กำลังโหลด...</div></div>
+    </div>
+
+    <!-- COMPLETED ENTRY PANEL -->
+    <div id="panel-completed-entry" class="panel">
+      <div class="search-box">
+        <h3>🔍 ค้นหาผู้ประกอบการเพื่อบันทึกงานที่ทำเสร็จ</h3>
+        <div class="search-input-row">
+          <input type="text" id="compSearchQ" placeholder="พิมพ์ชื่อกิจการ / ชื่อสถานประกอบการ / เลขประจำตัวผู้เสียภาษี..." oninput="searchComp()">
+          <select id="compFilterType" onchange="searchComp()">
+            <option value="">ทุกประเภท</option><option>นิติบุคคล</option><option>บุคคลธรรมดา</option>
+          </select>
+        </div>
+      </div>
+      <div id="compSearchResult"></div>
+
+      <div id="entryForm" class="card hidden">
+        <div class="card-title"><span class="dot"></span>บันทึกงานที่ทำเสร็จ</div>
+        <div class="info-band" id="infoBand"></div>
+
+        <div class="form-group">
+          <label>วันเดือนปีที่ชำระภาษี <span class="required">*</span></label>
+          <input type="date" id="cm_payDate" style="max-width:220px">
+        </div>
+
+        <div style="overflow-x:auto">
+          <table class="tax-input-table">
+            <thead>
+              <tr>
+                <th style="text-align:left;min-width:170px">ประเภทภาษี</th>
+                <th style="min-width:110px">ภาษี (บาท)</th>
+                <th style="min-width:110px">เบี้ยปรับ</th>
+                <th style="min-width:110px">เงินเพิ่ม</th>
+                <th style="min-width:110px">ค่าปรับ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>ภาษีเงินได้บุคคลธรรมดา</td><td><input type="number" id="cm_pit_tax" placeholder="0" min="0"></td><td><input type="number" id="cm_pit_fine" placeholder="0" min="0"></td><td><input type="number" id="cm_pit_sur" placeholder="0" min="0"></td><td><input type="number" id="cm_pit_pen" placeholder="0" min="0"></td></tr>
+              <tr><td>ภาษีเงินได้นิติบุคคล</td><td><input type="number" id="cm_cit_tax" placeholder="0" min="0"></td><td><input type="number" id="cm_cit_fine" placeholder="0" min="0"></td><td><input type="number" id="cm_cit_sur" placeholder="0" min="0"></td><td><input type="number" id="cm_cit_pen" placeholder="0" min="0"></td></tr>
+              <tr><td>ภาษีมูลค่าเพิ่ม (VAT)</td><td><input type="number" id="cm_vat_tax" placeholder="0" min="0"></td><td><input type="number" id="cm_vat_fine" placeholder="0" min="0"></td><td><input type="number" id="cm_vat_sur" placeholder="0" min="0"></td><td><input type="number" id="cm_vat_pen" placeholder="0" min="0"></td></tr>
+              <tr><td>ภาษีธุรกิจเฉพาะ</td><td><input type="number" id="cm_sbt_tax" placeholder="0" min="0"></td><td><input type="number" id="cm_sbt_fine" placeholder="0" min="0"></td><td><input type="number" id="cm_sbt_sur" placeholder="0" min="0"></td><td><input type="number" id="cm_sbt_pen" placeholder="0" min="0"></td></tr>
+              <tr><td>อากรแสตมป์</td><td><input type="number" id="cm_stm_tax" placeholder="0" min="0"></td><td><input type="number" id="cm_stm_fine" placeholder="0" min="0"></td><td><input type="number" id="cm_stm_sur" placeholder="0" min="0"></td><td><input type="number" id="cm_stm_pen" placeholder="0" min="0"></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="form-group">
+          <label>หมายเหตุ</label>
+          <textarea id="cm_remarks" placeholder="บันทึกเพิ่มเติม..."></textarea>
+        </div>
+
+        <input type="hidden" id="cm_surveyId">
+
+        <div class="actions">
+          <button class="btn btn-success" onclick="saveCompleted()">💾 บันทึกงานที่ทำเสร็จ</button>
+          <button class="btn btn-outline" onclick="clearCompForm()">ล้างแบบฟอร์ม</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLETED REPORT PANEL -->
+    <div id="panel-completed-report" class="panel">
+      <div class="card">
+        <div class="card-title" style="flex-wrap:wrap;gap:8px">
+          <span class="dot"></span>รายงานงานที่ทำเสร็จ
+          <span style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap" class="no-print">
+            <button class="btn btn-outline btn-sm" onclick="loadCompleted()">🔄 รีเฟรช</button>
+            <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ พิมพ์</button>
+            <button class="btn btn-success btn-sm" onclick="exportCompCSV()">📥 Export CSV</button>
+          </span>
+        </div>
+
+        <p style="text-align:center;color:var(--text-muted);margin-bottom:15px;font-size:13px">
+          โครงการสำรวจธุรกิจประกอบการกลางคืน · สรรพากรพื้นที่กรุงเทพมหานคร 13
+        </p>
+
+        <div class="tbl-wrap">
+          <table class="work-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="min-width:46px">ลำดับ</th>
+                <th rowspan="2" style="min-width:150px">ชื่อผู้ประกอบการ</th>
+                <th rowspan="2" style="min-width:125px">เลขประจำตัว</th>
+                <th rowspan="2" style="min-width:130px">ชื่อสถาน</th>
+                <th rowspan="2" style="min-width:105px">วันที่ชำระ</th>
+                <th colspan="4">ภษ.บุคคลธรรมดา</th>
+                <th colspan="4">ภษ.นิติบุคคล</th>
+                <th colspan="4">VAT</th>
+                <th colspan="4">ธุรกิจเฉพาะ</th>
+                <th colspan="4">อากรแสตมป์</th>
+                <th rowspan="2" style="min-width:110px">รวม</th>
+              </tr>
+              <tr>
+                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyComp">
+              <tr><td colspan="27" class="loading">กำลังโหลด...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style="text-align:center;margin-top:20px;font-size:12px;color:var(--text-muted)">
+          รวมทั้งหมด <b id="comp-count">—</b> รายการ
+        </p>
+      </div>
+    </div>
+
+    <!-- EXPORT PANEL -->
+    <div id="panel-export" class="panel">
+      <div class="card">
+        <div class="card-title"><span class="dot"></span>ส่งออกข้อมูล</div>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="exportSurveyCSV()">📥 CSV ข้อมูลสำรวจ</button>
+          <button class="btn btn-outline" onclick="exportCompCSV()">📥 CSV งานที่ทำเสร็จ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let allRecords = [];
+let compRecords = [];
+const TODAY_BE = new Date().getFullYear() + 543;
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  if (!email || !pass) { showLoginAlert('กรุณากรอกอีเมลและรหัสผ่าน','error'); return; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> กำลังเข้าสู่ระบบ...';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) { showLoginAlert('อีเมลหรือรหัสผ่านไม่ถูกต้อง','error'); btn.disabled=false; btn.textContent='เข้าสู่ระบบ'; return; }
+  currentUser = data.user;
+  showApp();
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  currentUser = null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginPage').style.display='flex';
+  document.getElementById('loginPassword').value='';
+}
+
+async function checkSession() {
+  const { data:{session} } = await sb.auth.getSession();
+  if (session) { currentUser = session.user; showApp(); }
+}
+
+function showApp() {
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('userBadge').textContent = currentUser.email;
+  document.getElementById('surveyDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('cm_payDate').value = new Date().toISOString().split('T')[0];
+  onTypeChange();
+  loadRecords();
+  loadCompleted();
+}
+
+function onTypeChange() {
+  const isJ = document.querySelector('input[name="taxpayerType"]:checked')?.value === 'นิติบุคคล';
+  document.getElementById('nameLabel').innerHTML = (isJ?'ชื่อนิติบุคคล':'ชื่อ-นามสกุล')+' <span class="required">*</span>';
+  document.getElementById('regNumGroup').style.display = isJ?'':'none';
+}
+
+function onVATChange(el) {
+  document.getElementById('vatDetail').style.display = el.value === 'จดทะเบียน VAT' ? '' : 'none';
+}
+
+function onBizTypeChange() {
+  document.getElementById('otherBizGroup').style.display = document.getElementById('bizType').value === 'อื่น ๆ' ? '' : 'none';
+}
+
+const gv = id => (document.getElementById(id)||{}).value?.trim() || '';
+const gn = id => parseFloat(gv(id)) || 0;
+
+async function saveRecord() {
+  const tin = gv('tin'), name = gv('bizName'), address = gv('address');
+  const sub = gv('subdistrict'), dist = gv('district'), vatStatus = document.querySelector('input[name="vatStatus"]:checked')?.value || '';
+  if (!tin || tin.length !== 13) { showAppAlert('กรุณากรอกเลขผู้เสียภาษี 13 หลัก','error'); return; }
+  if (!name) { showAppAlert('กรุณากรอกชื่อกิจการ','error'); return; }
+  if (!gv('bizType') && !gv('otherBizType')) { showAppAlert('กรุณาเลือกประเภทกิจการ','error'); return; }
+  if (!address || !sub || !dist) { showAppAlert('กรุณากรอกที่อยู่ให้ครบ','error'); return; }
+  if (!vatStatus) { showAppAlert('กรุณาเลือกสถานะ VAT','error'); return; }
+
+  const { data:dup } = await sb.from('nightbiz_survey').select('id').eq('tin', tin);
+  if (dup && dup.length > 0) { showAppAlert('เลขผู้เสียภาษี '+tin+' มีในระบบแล้ว','error'); return; }
+
+  const payload = {
+    type: document.querySelector('input[name="taxpayerType"]:checked').value,
+    tin, name, biz_brand_name: gv('bizBrandName'), reg_number: gv('regNumber'),
+    biz_type: gv('bizType') === 'อื่น ๆ' ? gv('otherBizType') : gv('bizType'),
+    address, subdistrict: sub, district: dist, province: gv('province'),
+    postal_code: gv('postalCode'), location_note: gv('locationNote'),
+    vat_status: vatStatus, vat_number: gv('vatNumber'),
+    vat_reg_date: gv('vatRegDate') || null, vat_period: gv('vatPeriod'),
+    vat_sales: parseFloat(gv('vatSales')) || 0,
+    survey_date: gv('surveyDate'), officer_email: currentUser.email,
+    officer_unit: gv('officerUnit'), risk_level: gv('riskLevel'),
+    remarks: gv('remarks'), created_at: new Date().toISOString(), created_by: currentUser.id
+  };
+
+  const { error } = await sb.from('nightbiz_survey').insert([payload]);
+  if (error) { showAppAlert('บันทึกไม่สำเร็จ','error'); return; }
+  showAppAlert('บันทึกเรียบร้อย','success');
+  clearForm();
+  await loadRecords();
+}
+
+function clearForm() {
+  ['tin','bizName','bizBrandName','address','subdistrict','district','postalCode','locationNote','remarks'].forEach(id => {
+    const e = document.getElementById(id);
+    if (e) e.value = '';
+  });
+  document.getElementById('surveyDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('province').value = 'กรุงเทพมหานคร';
+  document.querySelector('input[name="taxpayerType"]').checked = true;
+  document.querySelectorAll('input[name="vatStatus"]').forEach(r => r.checked = false);
+  document.getElementById('vatDetail').style.display = 'none';
+  onTypeChange();
+}
+
+async function loadRecords() {
+  const { data, error } = await sb.from('nightbiz_survey').select('*').order('created_at', { ascending: false });
+  if (error) { showAppAlert('โหลดข้อมูลไม่สำเร็จ','error'); return; }
+  allRecords = data || [];
+  renderList();
+}
+
+function renderList() {
+  const el = document.getElementById('recordList');
+  document.getElementById('s-total').textContent = allRecords.length;
+  document.getElementById('s-juristic').textContent = allRecords.filter(r => r.type === 'นิติบุคคล').length;
+  document.getElementById('s-personal').textContent = allRecords.filter(r => r.type === 'บุคคลธรรมดา').length;
+  document.getElementById('s-vat').textContent = allRecords.filter(r => r.vat_status === 'จดทะเบียน VAT').length;
+  if (!allRecords.length) { el.innerHTML = '<div class="empty">ไม่มีรายการ</div>'; return; }
+  el.innerHTML = allRecords.map(r => `
+    <div class="record-item">
+      <div class="record-name">${r.name}${r.biz_brand_name?` <span style="font-size:13px;font-weight:400">(${r.biz_brand_name})</span>`:''}</div>
+      <div class="record-sub">เลขผู้เสียภาษี: ${r.tin} · ${r.type} · ${r.survey_date||''}</div>
+      <button class="btn btn-success btn-sm" style="margin-top:8px" onclick="selectRecord('${r.id}', '${r.name.replace(/'/g,"\\\'")}', '${r.tin}', '${(r.biz_brand_name||'').replace(/'/g,"\\\'")}')">✍️ บันทึกงานเสร็จ</button>
+    </div>`).join('');
+}
+
+function selectRecord(id, name, tin, brandName) {
+  document.getElementById('cm_surveyId').value = id;
+  document.getElementById('infoBand').innerHTML = `
+    <span><b>ชื่อผู้ประกอบการ:</b> ${name}</span>
+    <span><b>เลขผู้เสียภาษี:</b> <span style="font-family:monospace">${tin}</span></span>
+    <span><b>ชื่อสถานประกอบการ:</b> ${brandName||'—'}</span>`;
+  document.getElementById('entryForm').classList.remove('hidden');
+  switchTab('completed-entry', document.querySelectorAll('.tab-btn')[2]);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function searchComp() {
+  const q = document.getElementById('compSearchQ').value.toLowerCase().trim();
+  const ft = document.getElementById('compFilterType').value;
+  const el = document.getElementById('compSearchResult');
+  if (!q && !ft) { el.innerHTML = ''; return; }
+  const matched = allRecords.filter(r =>
+    (!q || r.tin.includes(q) || r.name.toLowerCase().includes(q) || (r.biz_brand_name||'').toLowerCase().includes(q)) &&
+    (!ft || r.type === ft)
+  );
+  if (!matched.length) { el.innerHTML = '<div class="alert alert-warning">ไม่พบรายการ</div>'; return; }
+  el.innerHTML = `<div class="card"><div class="card-title"><span class="dot"></span>ผลการค้นหา (${matched.length} รายการ)</div>` +
+    matched.map(r => `
+      <div class="record-item" onclick="selectRecord('${r.id}', '${r.name.replace(/'/g,"\\\'")}', '${r.tin}', '${(r.biz_brand_name||'').replace(/'/g,"\\\'")}')"  style="cursor:pointer;margin-bottom:10px">
+        <div class="record-name">${r.name}${r.biz_brand_name?` (${r.biz_brand_name})`:''}</div>
+        <div class="record-sub">เลขผู้เสียภาษี: ${r.tin} · ${r.type}</div>
+      </div>`).join('') + '</div>';
+}
+
+function clearCompForm() {
+  ['cm_payDate','cm_pit_tax','cm_pit_fine','cm_pit_sur','cm_pit_pen','cm_cit_tax','cm_cit_fine','cm_cit_sur','cm_cit_pen',
+   'cm_vat_tax','cm_vat_fine','cm_vat_sur','cm_vat_pen','cm_sbt_tax','cm_sbt_fine','cm_sbt_sur','cm_sbt_pen',
+   'cm_stm_tax','cm_stm_fine','cm_stm_sur','cm_stm_pen','cm_remarks'].forEach(id => {
+    const e = document.getElementById(id);
+    if (e) e.value = '';
+  });
+  document.getElementById('cm_payDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('entryForm').classList.add('hidden');
+}
+
+async function saveCompleted() {
+  const surveyId = document.getElementById('cm_surveyId').value;
+  const payDate = document.getElementById('cm_payDate').value;
+  if (!payDate) { showAppAlert('กรุณาเลือกวันที่ชำระภาษี','error'); return; }
+
+  const payload = {
+    survey_id: surveyId, pay_date: payDate,
+    pit_tax: gn('cm_pit_tax'), pit_fine: gn('cm_pit_fine'), pit_sur: gn('cm_pit_sur'), pit_pen: gn('cm_pit_pen'),
+    cit_tax: gn('cm_cit_tax'), cit_fine: gn('cm_cit_fine'), cit_sur: gn('cm_cit_sur'), cit_pen: gn('cm_cit_pen'),
+    vat_tax: gn('cm_vat_tax'), vat_fine: gn('cm_vat_fine'), vat_sur: gn('cm_vat_sur'), vat_pen: gn('cm_vat_pen'),
+    sbt_tax: gn('cm_sbt_tax'), sbt_fine: gn('cm_sbt_fine'), sbt_sur: gn('cm_sbt_sur'), sbt_pen: gn('cm_sbt_pen'),
+    stm_tax: gn('cm_stm_tax'), stm_fine: gn('cm_stm_fine'), stm_sur: gn('cm_stm_sur'), stm_pen: gn('cm_stm_pen'),
+    remarks: gv('cm_remarks'), officer_email: currentUser.email, created_at: new Date().toISOString()
+  };
+
+  const { error } = await sb.from('nightbiz_completed').insert([payload]);
+  if (error) { showAppAlert('บันทึกไม่สำเร็จ: '+error.message,'error'); return; }
+  showAppAlert('บันทึกเสร็จแล้ว','success');
+  clearCompForm();
+  await loadCompleted();
+}
+
+async function loadCompleted() {
+  const { data, error } = await sb.from('nightbiz_completed').select('*, nightbiz_survey(name, tin, biz_brand_name)').order('pay_date', { ascending: false });
+  if (error) { return; }
+  compRecords = data || [];
+  renderCompTable();
+}
+
+function renderCompTable() {
+  const fmt = n => n ? Number(n).toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '—';
+  const gt = r => [r.pit_tax,r.pit_fine,r.pit_sur,r.pit_pen, r.cit_tax,r.cit_fine,r.cit_sur,r.cit_pen,
+    r.vat_tax,r.vat_fine,r.vat_sur,r.vat_pen, r.sbt_tax,r.sbt_fine,r.sbt_sur,r.sbt_pen,
+    r.stm_tax,r.stm_fine,r.stm_sur,r.stm_pen].reduce((a,b)=>a+(parseFloat(b)||0),0);
+  const tbody = document.getElementById('tbodyComp');
+  if (!compRecords.length) { tbody.innerHTML = '<tr><td colspan="27" class="empty">ไม่มีข้อมูล</td></tr>'; return; }
+  tbody.innerHTML = compRecords.map((r,i) => `
+    <tr>
+      <td class="ctr">${i+1}</td>
+      <td>${r.nightbiz_survey?.name||'—'}</td>
+      <td class="ctr">${r.nightbiz_survey?.tin||'—'}</td>
+      <td>${r.nightbiz_survey?.biz_brand_name||'—'}</td>
+      <td class="ctr">${r.pay_date||'—'}</td>
+      <td class="num tax-col">${fmt(r.pit_tax)}</td><td class="num tax-col">${fmt(r.pit_fine)}</td><td class="num tax-col">${fmt(r.pit_sur)}</td><td class="num tax-col">${fmt(r.pit_pen)}</td>
+      <td class="num tax-col">${fmt(r.cit_tax)}</td><td class="num tax-col">${fmt(r.cit_fine)}</td><td class="num tax-col">${fmt(r.cit_sur)}</td><td class="num tax-col">${fmt(r.cit_pen)}</td>
+      <td class="num tax-col">${fmt(r.vat_tax)}</td><td class="num tax-col">${fmt(r.vat_fine)}</td><td class="num tax-col">${fmt(r.vat_sur)}</td><td class="num tax-col">${fmt(r.vat_pen)}</td>
+      <td class="num tax-col">${fmt(r.sbt_tax)}</td><td class="num tax-col">${fmt(r.sbt_fine)}</td><td class="num tax-col">${fmt(r.sbt_sur)}</td><td class="num tax-col">${fmt(r.sbt_pen)}</td>
+      <td class="num tax-col">${fmt(r.stm_tax)}</td><td class="num tax-col">${fmt(r.stm_fine)}</td><td class="num tax-col">${fmt(r.stm_sur)}</td><td class="num tax-col">${fmt(r.stm_pen)}</td>
+      <td class="num" style="background:#e8f5ee;font-weight:600">${fmt(gt(r))}</td>
+    </tr>`).join('');
+  document.getElementById('comp-count').textContent = compRecords.length;
+}
+
+function exportSurveyCSV() {
+  if (!allRecords.length) { showAppAlert('ไม่มีข้อมูล','error'); return; }
+  const h = ['ลำดับ','ประเภท','เลขผู้เสียภาษี','ชื่อ','ชื่อสถานประกอบการ','ประเภทกิจการ','ที่อยู่','แขวง','เขต','จังหวัด','สถานะ VAT','วันที่สำรวจ','เจ้าหน้าที่'];
+  const rows = allRecords.map((r,i) => [i+1,r.type,r.tin,r.name,r.biz_brand_name,r.biz_type,r.address,r.subdistrict,r.district,r.province,r.vat_status,r.survey_date,r.officer_email].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(','));
+  const csv = '\uFEFF'+[h.join(','),...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'nightbiz_survey_'+Date.now()+'.csv';
+  a.click();
+}
+
+function exportCompCSV() {
+  if (!compRecords.length) { showAppAlert('ไม่มีข้อมูล','error'); return; }
+  const h = ['ลำดับ','ชื่อผู้ประกอบการ','เลขประจำตัว','ชื่อสถานประกอบการ','วันที่ชำระ','ภษ.บุคคล-ภาษี','ภษ.บุคคล-เบี้ยปรับ','ภษ.บุคคล-เงินเพิ่ม','ภษ.บุคคล-ค่าปรับ','ภษ.นิติ-ภาษี','ภษ.นิติ-เบี้ยปรับ','ภษ.นิติ-เงินเพิ่ม','ภษ.นิติ-ค่าปรับ','VAT-ภาษี','VAT-เบี้ยปรับ','VAT-เงินเพิ่ม','VAT-ค่าปรับ','ธุรกิจ-ภาษี','ธุรกิจ-เบี้ยปรับ','ธุรกิจ-เงินเพิ่ม','ธุรกิจ-ค่าปรับ','อากร-ภาษี','อากร-เบี้ยปรับ','อากร-เงินเพิ่ม','อากร-ค่าปรับ','รวม'];
+  const gt = r => [r.pit_tax,r.pit_fine,r.pit_sur,r.pit_pen, r.cit_tax,r.cit_fine,r.cit_sur,r.cit_pen, r.vat_tax,r.vat_fine,r.vat_sur,r.vat_pen, r.sbt_tax,r.sbt_fine,r.sbt_sur,r.sbt_pen, r.stm_tax,r.stm_fine,r.stm_sur,r.stm_pen].reduce((a,b)=>a+(parseFloat(b)||0),0);
+  const rows = compRecords.map((r,i) => [i+1,r.nightbiz_survey?.name,r.nightbiz_survey?.tin,r.nightbiz_survey?.biz_brand_name,r.pay_date, r.pit_tax,r.pit_fine,r.pit_sur,r.pit_pen, r.cit_tax,r.cit_fine,r.cit_sur,r.cit_pen, r.vat_tax,r.vat_fine,r.vat_sur,r.vat_pen, r.sbt_tax,r.sbt_fine,r.sbt_sur,r.sbt_pen, r.stm_tax,r.stm_fine,r.stm_sur,r.stm_pen, gt(r)].map(v => `"${String(v||'0').replace(/"/g,'""')}"`).join(','));
+  const csv = '\uFEFF'+[h.join(','),...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'nightbiz_completed_'+Date.now()+'.csv';
+  a.click();
+}
+
+function switchTab(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  if (el) el.classList.add('active');
+  if (name === 'completed-report') loadCompleted();
+}
+
+function showLoginAlert(msg, type) {
+  document.getElementById('loginAlert').innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+}
+
+function showAppAlert(msg, type) {
+  const a = document.getElementById('appAlert');
+  a.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+  if (type === 'success') setTimeout(() => a.innerHTML = '', 4000);
+}
+
+checkSession();
+</script>
+</body>
+</html>
