@@ -18,7 +18,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:var(--text);line-height:1.6}
-
+ 
 .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f3f4f6 0%,#e5e7eb 50%,#d1d5db 100%);padding:1rem}
 .login-card{background:var(--surface);border-radius:var(--radius-lg);padding:2.5rem 2rem;width:100%;max-width:400px;box-shadow:var(--shadow-md);border:1px solid var(--border)}
 .login-logo{text-align:center;margin-bottom:2rem}
@@ -26,13 +26,13 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .login-logo h1{font-size:17px;font-weight:600;color:var(--primary)}
 .login-logo p{font-size:13px;color:var(--text-muted);margin-top:4px}
 .login-divider{height:3px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:2px;margin-bottom:1.75rem}
-
+ 
 .form-group{margin-bottom:1.25rem}
 .form-group label{display:block;font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
 .form-group input,.form-group select,.form-group textarea{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:15px;font-family:'Sarabun',sans-serif;background:var(--surface);color:var(--text);transition:all .2s;caret-color:var(--primary)}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(59,130,246,.15);background:#fff}
 .form-group textarea{resize:vertical;min-height:100px}
-
+ 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 24px;border-radius:var(--radius);font-size:15px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;border:1px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.05em}
 .btn-primary{background:linear-gradient(135deg,var(--primary),#2563eb);color:#fff;border-color:var(--primary);box-shadow:0 4px 12px rgba(59,130,246,.3)}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(59,130,246,.4)}
 .btn-outline{background:transparent;color:var(--primary);border-color:var(--primary)}.btn-outline:hover{background:rgba(59,130,246,.1)}
@@ -41,7 +41,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .btn-full{width:100%}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .required{color:var(--danger)}
-
+ 
 .app{display:none;min-height:100vh}
 .topbar{background:linear-gradient(90deg,#ffffff,#f9fafb);color:var(--text);padding:0 1.5rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.08);border-bottom:2px solid var(--border)}
 .topbar-brand{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:var(--text)}
@@ -49,27 +49,27 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .user-badge{font-size:13px;color:var(--text-muted);background:var(--bg);padding:6px 14px;border-radius:99px;font-weight:600}
 .btn-logout{background:transparent;color:var(--text);border:1px solid var(--border);padding:7px 16px;border-radius:var(--radius);font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:600;transition:all .2s}
 .btn-logout:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
-
+ 
 .tabs-bar{background:var(--surface);border-bottom:2px solid var(--border);padding:0 1.5rem;display:flex;position:sticky;top:60px;z-index:99;box-shadow:0 1px 3px rgba(0,0,0,.05);overflow-x:auto}
 .tab-btn{padding:16px 20px;font-size:14px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;border:none;background:none;color:var(--text-muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em}
 .tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
 .tab-btn:hover:not(.active){color:var(--text)}
-
+ 
 .main-content{max-width:1100px;margin:0 auto;padding:1.5rem}
 .panel{display:none}.panel.active{display:block}
-
+ 
 .card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);padding:2rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
 .card-title{font-size:12px;font-weight:800;color:var(--primary);text-transform:uppercase;letter-spacing:.12em;margin-bottom:1.5rem;padding-bottom:12px;border-bottom:3px solid var(--primary);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .card-title .dot{width:8px;height:8px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px rgba(59,130,246,.4)}
-
+ 
 .search-box{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);padding:2rem;margin-bottom:1.5rem;box-shadow:var(--shadow)}
 .search-box h3{font-size:16px;font-weight:700;color:var(--primary);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.05em}
 .search-input-row{display:flex;gap:8px;flex-wrap:wrap}
 .search-input-row input{flex:1;min-width:220px}
-
+ 
 .info-band{background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(245,158,11,.08));border-radius:var(--radius);padding:16px 18px;margin-bottom:1.5rem;font-size:14px;display:flex;gap:24px;flex-wrap:wrap;border:1px solid var(--primary);border-left:4px solid var(--primary)}
 .info-band b{color:var(--text);font-weight:700}
-
+ 
 .tax-input-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
 .tax-input-table th{background:linear-gradient(90deg,#3b82f6,#2563eb);color:#fff;padding:12px 12px;font-weight:700;text-align:center;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--border)}
 .tax-input-table td{padding:8px 10px;border:1px solid var(--border)}
@@ -77,19 +77,19 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .tax-input-table tr:nth-child(even) td{background:rgba(37,99,235,.05)}
 .tax-input-table td:first-child{font-weight:600;padding-left:12px;color:var(--accent)}
 .tax-input-table input{width:100%;text-align:right;border:1px solid var(--border);border-radius:4px;padding:8px 10px;font-size:14px;font-family:'Sarabun',sans-serif;background:#3b82f6;color:#000;font-weight:600}
-
+ 
 .actions{display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap}
 .alert{padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:1rem;display:flex;align-items:center;gap:8px;animation:slideIn .2s ease}
 @keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .alert-success{background:var(--success-light);color:var(--success);border:1px solid #b6e0c6}
 .alert-error{background:var(--danger-light);color:var(--danger);border:1px solid #f5c4be}
 .alert-warning{background:var(--warning-light);color:var(--warning);border:1px solid #f5dfa0}
-
+ 
 .record-item{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:10px;box-shadow:var(--shadow);transition:box-shadow .15s;cursor:pointer}
 .record-item:hover{box-shadow:var(--shadow-md)}
 .record-name{font-size:15px;font-weight:600;color:var(--primary)}
 .record-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
-
+ 
 .tbl-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border-light)}
 .work-table{width:100%;border-collapse:collapse;font-size:12px;min-width:1800px;white-space:nowrap}
 .work-table th{background:linear-gradient(90deg,#3b82f6,#2563eb);color:#fff;padding:10px 8px;text-align:center;font-weight:700;border-right:1px solid rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:.05em;font-size:11px}
@@ -100,18 +100,18 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:var(--bg);color:
 .work-table .num{text-align:right;font-family:monospace;font-size:13px}
 .work-table .ctr{text-align:center}
 .work-table .tax-col{background:rgba(245,158,11,.08)}
-
+ 
 /* Button icon styles */
 button[onclick*="editRecord"],button[onclick*="deleteRecord"]{transition:all .2s ease}
 button[onclick*="editRecord"]:hover{background:var(--primary)!important;color:#fff!important}
 button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#fff!important}
-
+ 
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading{text-align:center;padding:2rem;color:var(--text-muted);font-size:13px}
 .empty{text-align:center;padding:3rem 1rem;color:var(--text-muted)}
 .hidden{display:none!important}
-
+ 
 @media print {
   .topbar, .tabs-bar, .no-print { display: none; }
   body { margin: 0; }
@@ -119,7 +119,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
 </style>
 </head>
 <body>
-
+ 
 <!-- LOGIN -->
 <div id="loginPage" class="login-page">
   <div class="login-card">
@@ -141,7 +141,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
     <button class="btn btn-primary btn-full" id="loginBtn" onclick="doLogin()">เข้าสู่ระบบ</button>
   </div>
 </div>
-
+ 
 <!-- APP -->
 <div id="app" class="app">
   <div class="topbar">
@@ -152,7 +152,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
       <button class="btn-logout" onclick="doLogout()">ออกจากระบบ</button>
     </div>
   </div>
-
+ 
   <div class="tabs-bar">
     <button class="tab-btn active" onclick="switchTab('input',this)">📋 บันทึกข้อมูล</button>
     <button class="tab-btn" onclick="switchTab('list',this)">📂 รายการทั้งหมด</button>
@@ -160,10 +160,10 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
     <button class="tab-btn" onclick="switchTab('completed-report',this)">📊 รายงานงานเสร็จ</button>
     <button class="tab-btn" onclick="switchTab('export',this)">📥 ส่งออก</button>
   </div>
-
+ 
   <div class="main-content">
     <div id="appAlert"></div>
-
+ 
     <!-- INPUT PANEL -->
     <div id="panel-input" class="panel active">
       <div class="card">
@@ -212,7 +212,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
           </div>
         </div>
       </div>
-
+ 
       <div class="card">
         <div class="card-title"><span class="dot"></span>สถานที่ตั้งกิจการ</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
@@ -227,7 +227,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
           <div class="form-group" style="grid-column:1/-1"><label>หมายเหตุสถานที่</label><input type="text" id="locationNote"></div>
         </div>
       </div>
-
+ 
       <div class="card">
         <div class="card-title"><span class="dot"></span>ภาษีมูลค่าเพิ่ม (VAT)</div>
         <div class="form-group">
@@ -247,7 +247,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
           </div>
         </div>
       </div>
-
+ 
       <div class="card">
         <div class="card-title"><span class="dot"></span>ข้อมูลเจ้าหน้าที่</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
@@ -260,13 +260,13 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
           <div class="form-group" style="grid-column:1/-1"><label>หมายเหตุ</label><textarea id="remarks"></textarea></div>
         </div>
       </div>
-
+ 
       <div class="actions">
         <button class="btn btn-primary" id="saveBtn" data-editId="" onclick="saveRecord()">บันทึกข้อมูล</button>
         <button class="btn btn-outline" onclick="clearForm()">ล้างแบบฟอร์ม</button>
       </div>
     </div>
-
+ 
     <!-- LIST PANEL -->
     <div id="panel-list" class="panel">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem">
@@ -320,7 +320,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
         </table>
       </div>
     </div>
-
+ 
     <!-- COMPLETED ENTRY PANEL -->
     <div id="panel-completed-entry" class="panel">
       <div class="search-box">
@@ -333,16 +333,16 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
         </div>
       </div>
       <div id="compSearchResult"></div>
-
+ 
       <div id="entryForm" class="card hidden">
         <div class="card-title"><span class="dot"></span>บันทึกงานที่ทำเสร็จ</div>
         <div class="info-band" id="infoBand"></div>
-
+ 
         <div class="form-group">
           <label>วันเดือนปีที่ชำระภาษี <span class="required">*</span></label>
           <input type="date" id="cm_payDate" style="max-width:220px">
         </div>
-
+ 
         <div style="overflow-x:auto">
           <table class="tax-input-table">
             <thead>
@@ -363,21 +363,21 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
             </tbody>
           </table>
         </div>
-
+ 
         <div class="form-group">
           <label>หมายเหตุ</label>
           <textarea id="cm_remarks" placeholder="บันทึกเพิ่มเติม..."></textarea>
         </div>
-
+ 
         <input type="hidden" id="cm_surveyId">
-
+ 
         <div class="actions">
           <button class="btn btn-success" onclick="saveCompleted()">💾 บันทึกงานที่ทำเสร็จ</button>
           <button class="btn btn-outline" onclick="clearCompForm()">ล้างแบบฟอร์ม</button>
         </div>
       </div>
     </div>
-
+ 
     <!-- COMPLETED REPORT PANEL -->
     <div id="panel-completed-report" class="panel">
       <div class="card">
@@ -389,11 +389,11 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
             <button class="btn btn-success btn-sm" onclick="exportCompCSV()">📥 Export CSV</button>
           </span>
         </div>
-
+ 
         <p style="text-align:center;color:var(--text-muted);margin-bottom:15px;font-size:13px">
           โครงการสำรวจธุรกิจประกอบการกลางคืน · สรรพากรพื้นที่กรุงเทพมหานคร 13
         </p>
-
+ 
         <div class="tbl-wrap">
           <table class="work-table">
             <thead>
@@ -423,13 +423,13 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
             </tbody>
           </table>
         </div>
-
+ 
         <p style="text-align:center;margin-top:20px;font-size:12px;color:var(--text-muted)">
           รวมทั้งหมด <b id="comp-count">—</b> รายการ
         </p>
       </div>
     </div>
-
+ 
     <!-- EXPORT PANEL -->
     <div id="panel-export" class="panel">
       <div class="card">
@@ -442,16 +442,16 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
     </div>
   </div>
 </div>
-
+ 
 <script>
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-
+ 
 let currentUser = null;
 let allRecords = [];
 let compRecords = [];
 const TODAY_BE = new Date().getFullYear() + 543;
-
+ 
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPassword').value;
@@ -464,7 +464,7 @@ async function doLogin() {
   currentUser = data.user;
   showApp();
 }
-
+ 
 async function doLogout() {
   await sb.auth.signOut();
   currentUser = null;
@@ -472,12 +472,12 @@ async function doLogout() {
   document.getElementById('loginPage').style.display='flex';
   document.getElementById('loginPassword').value='';
 }
-
+ 
 async function checkSession() {
   const { data:{session} } = await sb.auth.getSession();
   if (session) { currentUser = session.user; showApp(); }
 }
-
+ 
 function showApp() {
   document.getElementById('loginPage').style.display='none';
   document.getElementById('app').style.display='block';
@@ -488,24 +488,24 @@ function showApp() {
   loadRecords();
   // loadCompleted(); // ปิดชั่วคราว เพื่อไม่ให้ error
 }
-
+ 
 function onTypeChange() {
   const isJ = document.querySelector('input[name="taxpayerType"]:checked')?.value === 'นิติบุคคล';
   document.getElementById('nameLabel').innerHTML = (isJ?'ชื่อนิติบุคคล':'ชื่อ-นามสกุล')+' <span class="required">*</span>';
   document.getElementById('regNumGroup').style.display = isJ?'':'none';
 }
-
+ 
 function onVATChange(el) {
   document.getElementById('vatDetail').style.display = el.value === 'จดทะเบียน VAT' ? '' : 'none';
 }
-
+ 
 function onBizTypeChange() {
   document.getElementById('otherBizGroup').style.display = document.getElementById('bizType').value === 'อื่น ๆ' ? '' : 'none';
 }
-
+ 
 const gv = id => (document.getElementById(id)||{}).value?.trim() || '';
 const gn = id => parseFloat(gv(id)) || 0;
-
+ 
 async function saveRecord() {
   const tin = gv('tin'), name = gv('bizName'), address = gv('address');
   const sub = gv('subdistrict'), dist = gv('district'), vatStatus = document.querySelector('input[name="vatStatus"]:checked')?.value || '';
@@ -514,17 +514,17 @@ async function saveRecord() {
   if (!gv('bizType') && !gv('otherBizType')) { showAppAlert('กรุณาเลือกประเภทกิจการ','error'); return; }
   if (!address || !sub || !dist) { showAppAlert('กรุณากรอกที่อยู่ให้ครบ','error'); return; }
   if (!vatStatus) { showAppAlert('กรุณาเลือกสถานะ VAT','error'); return; }
-
+ 
   const editId = document.querySelector('.tab-btn.active')?.dataset.editId || document.getElementById('saveBtn')?.dataset.editId;
   
   if (!editId) {
     const { data:dup } = await sb.from('nightbiz_survey').select('id').eq('tin', tin);
     if (dup && dup.length > 0) { showAppAlert('เลขผู้เสียภาษี '+tin+' มีในระบบแล้ว','error'); return; }
   }
-
+ 
   const payload = {
     type: document.querySelector('input[name="taxpayerType"]:checked').value,
-    tin, name, biz_brand_name: gv('bizBrandName'), reg_number: gv('regNumber'),
+    tin, name, reg_number: gv('regNumber'),
     biz_type: gv('bizType') === 'อื่น ๆ' ? gv('otherBizType') : gv('bizType'),
     address, subdistrict: sub, district: dist, province: gv('province'),
     postal_code: gv('postalCode'), location_note: gv('locationNote'),
@@ -535,7 +535,7 @@ async function saveRecord() {
     officer_unit: gv('officerUnit'), risk_level: gv('riskLevel'),
     remarks: gv('remarks'), updated_at: new Date().toISOString()
   };
-
+ 
   if (!editId) {
     payload.created_at = new Date().toISOString();
     payload.created_by = currentUser.id;
@@ -550,7 +550,7 @@ async function saveRecord() {
   clearForm();
   await loadRecords();
 }
-
+ 
 function clearForm() {
   ['tin','bizName','bizBrandName','address','subdistrict','district','postalCode','locationNote','remarks'].forEach(id => {
     const e = document.getElementById(id);
@@ -564,20 +564,20 @@ function clearForm() {
   document.getElementById('saveBtn').dataset.editId = '';
   onTypeChange();
 }
-
+ 
 async function loadRecords() {
   const { data, error } = await sb.from('nightbiz_survey').select('*').order('created_at', { ascending: false });
   if (error) { showAppAlert('โหลดข้อมูลไม่สำเร็จ','error'); return; }
   allRecords = data || [];
   renderList();
 }
-
+ 
 function renderList() {
   const q  = document.getElementById('searchQ').value.toLowerCase().trim();
   const ft = document.getElementById('filterType').value;
   const fv = document.getElementById('filterVAT').value;
   const rows = allRecords.filter(r =>
-    (!q  || r.name.toLowerCase().includes(q) || r.tin.includes(q) || (r.biz_brand_name||'').toLowerCase().includes(q)) &&
+    (!q  || r.name.toLowerCase().includes(q) || r.tin.includes(q)) &&
     (!ft || r.type === ft) && (!fv || r.vat_status === fv)
   );
   const tbody = document.getElementById('recordTableBody');
@@ -591,7 +591,7 @@ function renderList() {
       <td class="ctr">${i+1}</td>
       <td>${r.name}</td>
       <td class="ctr" style="font-family:monospace;font-size:12px">${r.tin}</td>
-      <td>${r.biz_brand_name||'—'}</td>
+      <td>${r.biz_type||'—'}</td>
       <td class="ctr">${r.type}</td>
       <td class="ctr">${r.vat_status||'—'}</td>
       <td>${r.biz_type||'—'}</td>
@@ -604,7 +604,7 @@ function renderList() {
       </td>
     </tr>`).join('');
 }
-
+ 
 function selectRecord(id, name, tin, brandName) {
   document.getElementById('cm_surveyId').value = id;
   document.getElementById('infoBand').innerHTML = `
@@ -615,7 +615,7 @@ function selectRecord(id, name, tin, brandName) {
   switchTab('completed-entry', document.querySelectorAll('.tab-btn')[2]);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
+ 
 function editRecord(id) {
   const r = allRecords.find(x => x.id === id);
   if (!r) return;
@@ -623,7 +623,7 @@ function editRecord(id) {
   setTimeout(() => {
     document.querySelector(`input[name="taxpayerType"][value="${r.type}"]`).checked = true;
     onTypeChange();
-    const fm = { tin:'tin', bizName:'name', bizBrandName:'biz_brand_name', regNumber:'reg_number',
+    const fm = { tin:'tin', bizName:'name', regNumber:'reg_number',
       address:'address', subdistrict:'subdistrict', district:'district', province:'province',
       postalCode:'postal_code', locationNote:'location_note', vatNumber:'vat_number',
       vatRegDate:'vat_reg_date', vatSales:'vat_sales', officerUnit:'officer_unit',
@@ -642,7 +642,7 @@ function editRecord(id) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 50);
 }
-
+ 
 async function deleteRecord(id, tin) {
   if (!confirm(`ต้องการลบข้อมูลเลขผู้เสียภาษี ${tin} หรือไม่?`)) return;
   const { error } = await sb.from('nightbiz_survey').delete().eq('id', id);
@@ -650,25 +650,25 @@ async function deleteRecord(id, tin) {
   showAppAlert('ลบเรียบร้อย','success');
   await loadRecords();
 }
-
+ 
 function searchComp() {
   const q = document.getElementById('compSearchQ').value.toLowerCase().trim();
   const ft = document.getElementById('compFilterType').value;
   const el = document.getElementById('compSearchResult');
   if (!q && !ft) { el.innerHTML = ''; return; }
   const matched = allRecords.filter(r =>
-    (!q || r.tin.includes(q) || r.name.toLowerCase().includes(q) || (r.biz_brand_name||'').toLowerCase().includes(q)) &&
+    (!q || r.tin.includes(q) || r.name.toLowerCase().includes(q)) &&
     (!ft || r.type === ft)
   );
   if (!matched.length) { el.innerHTML = '<div class="alert alert-warning">ไม่พบรายการ</div>'; return; }
   el.innerHTML = `<div class="card"><div class="card-title"><span class="dot"></span>ผลการค้นหา (${matched.length} รายการ)</div>` +
     matched.map(r => `
-      <div class="record-item" onclick="selectRecord('${r.id}', '${r.name.replace(/'/g,"\\\'")}', '${r.tin}', '${(r.biz_brand_name||'').replace(/'/g,"\\\'")}')"  style="cursor:pointer;margin-bottom:10px">
-        <div class="record-name">${r.name}${r.biz_brand_name?` (${r.biz_brand_name})`:''}</div>
+      <div class="record-item" onclick="selectRecord('${r.id}', '${r.name.replace(/'/g,"\\'")}', '${r.tin}', '${r.biz_type||''}')"  style="cursor:pointer;margin-bottom:10px">
+        <div class="record-name">${r.name}</div>
         <div class="record-sub">เลขผู้เสียภาษี: ${r.tin} · ${r.type}</div>
       </div>`).join('') + '</div>';
 }
-
+ 
 function clearCompForm() {
   ['cm_payDate','cm_pit_tax','cm_pit_fine','cm_pit_sur','cm_pit_pen','cm_cit_tax','cm_cit_fine','cm_cit_sur','cm_cit_pen',
    'cm_vat_tax','cm_vat_fine','cm_vat_sur','cm_vat_pen','cm_sbt_tax','cm_sbt_fine','cm_sbt_sur','cm_sbt_pen',
@@ -679,12 +679,12 @@ function clearCompForm() {
   document.getElementById('cm_payDate').value = new Date().toISOString().split('T')[0];
   document.getElementById('entryForm').classList.add('hidden');
 }
-
+ 
 async function saveCompleted() {
   const surveyId = document.getElementById('cm_surveyId').value;
   const payDate = document.getElementById('cm_payDate').value;
   if (!payDate) { showAppAlert('กรุณาเลือกวันที่ชำระภาษี','error'); return; }
-
+ 
   const payload = {
     survey_id: surveyId, pay_date: payDate,
     pit_tax: gn('cm_pit_tax'), pit_fine: gn('cm_pit_fine'), pit_sur: gn('cm_pit_sur'), pit_pen: gn('cm_pit_pen'),
@@ -694,21 +694,21 @@ async function saveCompleted() {
     stm_tax: gn('cm_stm_tax'), stm_fine: gn('cm_stm_fine'), stm_sur: gn('cm_stm_sur'), stm_pen: gn('cm_stm_pen'),
     remarks: gv('cm_remarks'), officer_email: currentUser.email, created_at: new Date().toISOString()
   };
-
+ 
   const { error } = await sb.from('nightbiz_completed').insert([payload]);
   if (error) { showAppAlert('บันทึกไม่สำเร็จ: '+error.message,'error'); return; }
   showAppAlert('บันทึกเสร็จแล้ว','success');
   clearCompForm();
   await loadCompleted();
 }
-
+ 
 async function loadCompleted() {
   const { data, error } = await sb.from('nightbiz_completed').select('*, nightbiz_survey(name, tin, biz_type)').order('pay_date', { ascending: false });
   if (error) { showAppAlert('โหลดรายงานไม่สำเร็จ: '+error.message,'error'); console.error(error); return; }
   compRecords = data || [];
   renderCompTable();
 }
-
+ 
 function renderCompTable() {
   const fmt = n => n ? Number(n).toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '—';
   const gt = r => [r.pit_tax,r.pit_fine,r.pit_sur,r.pit_pen, r.cit_tax,r.cit_fine,r.cit_sur,r.cit_pen,
@@ -732,18 +732,18 @@ function renderCompTable() {
     </tr>`).join('');
   document.getElementById('comp-count').textContent = compRecords.length;
 }
-
+ 
 function exportSurveyCSV() {
   if (!allRecords.length) { showAppAlert('ไม่มีข้อมูล','error'); return; }
   const h = ['ลำดับ','ประเภท','เลขผู้เสียภาษี','ชื่อ','ชื่อสถานประกอบการ','ประเภทกิจการ','ที่อยู่','แขวง','เขต','จังหวัด','สถานะ VAT','วันที่สำรวจ','เจ้าหน้าที่'];
-  const rows = allRecords.map((r,i) => [i+1,r.type,r.tin,r.name,r.biz_brand_name,r.biz_type,r.address,r.subdistrict,r.district,r.province,r.vat_status,r.survey_date,r.officer_email].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(','));
+  const rows = allRecords.map((r,i) => [i+1,r.type,r.tin,r.name,r.biz_type,r.address,r.subdistrict,r.district,r.province,r.vat_status,r.survey_date,r.officer_email].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(','));
   const csv = '\uFEFF'+[h.join(','),...rows].join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
   a.download = 'nightbiz_survey_'+Date.now()+'.csv';
   a.click();
 }
-
+ 
 function exportCompCSV() {
   if (!compRecords.length) { showAppAlert('ไม่มีข้อมูล','error'); return; }
   const h = ['ลำดับ','ชื่อผู้ประกอบการ','เลขประจำตัว','ชื่อสถานประกอบการ','วันที่ชำระ','ภษ.บุคคล-ภาษี','ภษ.บุคคล-เบี้ยปรับ','ภษ.บุคคล-เงินเพิ่ม','ภษ.บุคคล-ค่าปรับ','ภษ.นิติ-ภาษี','ภษ.นิติ-เบี้ยปรับ','ภษ.นิติ-เงินเพิ่ม','ภษ.นิติ-ค่าปรับ','VAT-ภาษี','VAT-เบี้ยปรับ','VAT-เงินเพิ่ม','VAT-ค่าปรับ','ธุรกิจ-ภาษี','ธุรกิจ-เบี้ยปรับ','ธุรกิจ-เงินเพิ่ม','ธุรกิจ-ค่าปรับ','อากร-ภาษี','อากร-เบี้ยปรับ','อากร-เงินเพิ่ม','อากร-ค่าปรับ','รวม'];
@@ -755,7 +755,7 @@ function exportCompCSV() {
   a.download = 'nightbiz_completed_'+Date.now()+'.csv';
   a.click();
 }
-
+ 
 function switchTab(name, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -763,17 +763,17 @@ function switchTab(name, el) {
   if (el) el.classList.add('active');
   if (name === 'completed-report') loadCompleted();
 }
-
+ 
 function showLoginAlert(msg, type) {
   document.getElementById('loginAlert').innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
 }
-
+ 
 function showAppAlert(msg, type) {
   const a = document.getElementById('appAlert');
   a.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
   if (type === 'success') setTimeout(() => a.innerHTML = '', 4000);
 }
-
+ 
 function resetApp() {
   // ล้าง alert ทั้งหมด
   document.getElementById('appAlert').innerHTML = '';
@@ -782,7 +782,7 @@ function resetApp() {
   // รีเฟรชหน้า
   location.reload();
 }
-
+ 
 checkSession();
 </script>
 </body>
