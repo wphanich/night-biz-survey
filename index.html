@@ -196,7 +196,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
 <!-- APP -->
 <div id="app" class="app">
   <div class="topbar">
-    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สำนักงานสรรพากรพื้นที่ กทม.13</div>
+    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กทม.13</div>
     <div class="topbar-right">
       <span class="user-badge" id="userBadge">—</span>
       <button class="btn-logout" onclick="resetApp()">🔄 รีเฟรช</button>
@@ -1066,13 +1066,20 @@ async function saveCompleted() {
 }
  
 async function loadCompleted() {
+  console.log('loadCompleted called');
   const { data, error } = await sb.from('nightbiz_completed').select('*, nightbiz_survey(name, tin, biz_type)').order('pay_date', { ascending: false });
-  if (error) { showAppAlert('โหลดรายงานไม่สำเร็จ: '+error.message,'error'); console.error(error); return; }
+  if (error) { 
+    console.error('loadCompleted error:', error);
+    showAppAlert('โหลดรายงานไม่สำเร็จ: '+error.message,'error'); 
+    return; 
+  }
   compRecords = data || [];
+  console.log('Loaded completed records:', compRecords.length);
   renderCompTable();
 }
  
 function renderCompTable() {
+  console.log('renderCompTable called, records:', compRecords.length);
   const fmt = n => n ? Number(n).toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '—';
   
   // คำนวณรวมภาษี = ภาษี + เบี้ยปรับ + เงินเพิ่ม ต่อประเภท
@@ -1089,7 +1096,17 @@ function renderCompTable() {
   };
   
   const tbody = document.getElementById('tbodyComp');
-  if (!compRecords.length) { tbody.innerHTML = '<tr><td colspan="16" class="empty">ไม่มีข้อมูล</td></tr>'; return; }
+  if (!tbody) {
+    console.error('tbodyComp element not found!');
+    return;
+  }
+  
+  if (!compRecords.length) { 
+    console.log('No records to display');
+    tbody.innerHTML = '<tr><td colspan="16" class="empty">ไม่มีข้อมูล</td></tr>'; 
+    return; 
+  }
+  
   tbody.innerHTML = compRecords.map((r,i) => `
     <tr>
       <td class="ctr">${i+1}</td>
@@ -1104,6 +1121,7 @@ function renderCompTable() {
       <td class="num tax-col">${fmt(calcTax(r.stm_tax, r.stm_fine, r.stm_sur))}</td><td class="num tax-col">${fmt(r.stm_pen)}</td>
       <td class="num" style="background:#e8f5ee;font-weight:600">${fmt(gt(r))}</td>
     </tr>`).join('');
+  console.log('Rendered', compRecords.length, 'rows');
   document.getElementById('comp-count').textContent = compRecords.length;
 }
  
