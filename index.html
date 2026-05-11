@@ -207,7 +207,6 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
   <div class="tabs-bar">
     <button class="tab-btn active" onclick="switchTab('input',this)">📋 บันทึกข้อมูล</button>
     <button class="tab-btn" onclick="switchTab('list',this)">📂 รายการทั้งหมด</button>
-    <button class="tab-btn" onclick="switchTab('completed-entry',this)">✍️ บันทึกงานเสร็จ</button>
     <button class="tab-btn" onclick="switchTab('completed-report',this)">📊 รายงานงานเสร็จ</button>
     <button class="tab-btn" onclick="switchTab('export',this)">📥 ส่งออก</button>
   </div>
@@ -364,11 +363,11 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
               <th style="min-width:105px">วันที่สำรวจ</th>
               <th style="min-width:110px">เจ้าหน้าที่</th>
               <th style="min-width:150px">หมายเหตุ</th>
-              <th style="min-width:100px">จัดการ</th>
+              <th style="min-width:140px">จัดการ</th>
             </tr>
           </thead>
           <tbody id="recordTableBody">
-            <tr><td colspan="12" class="loading">กำลังโหลด...</td></tr>
+            <tr><td colspan="13" class="loading">กำลังโหลด...</td></tr>
           </tbody>
         </table>
       </div>
@@ -381,26 +380,8 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
         </div>
       </div>
  
-    <!-- COMPLETED ENTRY PANEL -->
-    <div id="panel-completed-entry" class="panel">
-      <div class="search-box">
-        <h3>🔍 ค้นหาผู้ประกอบการเพื่อบันทึกงานที่ทำเสร็จ</h3>
-        <div class="search-input-row">
-          <input type="text" id="compSearchQ" placeholder="พิมพ์ชื่อกิจการ / ชื่อสถานประกอบการ / เลขประจำตัวผู้เสียภาษี..." oninput="searchComp()">
-          <select id="compFilterType" onchange="searchComp()">
-            <option value="">ทุกประเภท</option><option>นิติบุคคล</option><option>บุคคลธรรมดา</option>
-          </select>
-        </div>
-      </div>
-      <div id="compSearchResult" style="min-height:100px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:14px">
-        <div style="text-align:center;padding:2rem">
-          <div style="font-size:24px;margin-bottom:10px">📝</div>
-          <div>ค้นหาผู้ประกอบการเพื่อบันทึกข้อมูล</div>
-          <div style="font-size:12px;margin-top:8px">พิมพ์ชื่อ เลขประจำตัว หรือเลือกประเภท</div>
-        </div>
-      </div>
- 
-      <div id="entryForm" class="card hidden">
+      <!-- FORM BUNTUK NGAAN THAM LIW -->
+      <div id="entryForm" class="card hidden" style="margin-top:2rem">
         <div class="card-title"><span class="dot"></span>บันทึกงานที่ทำเสร็จ</div>
         <div class="info-band" id="infoBand"></div>
  
@@ -475,8 +456,10 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
             </div>
           </div>
         </div>
+ 
+        <div class="form-group">
           <label>หมายเหตุ</label>
-          <textarea id="cm_remarks" placeholder="บันทึกเพิ่มเติม..."></textarea>
+          <input type="text" id="cm_remarks" placeholder="บันทึกเพิ่มเติม (ถ้ามี)">
         </div>
  
         <input type="hidden" id="cm_surveyId">
@@ -487,15 +470,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
         </div>
       </div>
  
-      <div class="card" style="margin-top:2rem">
-        <div class="card-title"><span class="dot"></span>แก้ไขข้อมูลที่บันทึกแล้ว</div>
-        <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
-          <input type="text" id="editSearchQ" placeholder="ค้นหาผู้ประกอบการ / เลขประจำตัว..." style="flex:1;min-width:200px;border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;font-size:14px;font-family:'Sarabun',sans-serif" oninput="searchEditRecords()">
-          <button class="btn btn-outline btn-sm" onclick="loadCompleted()">🔄 รีเฟรช</button>
-        </div>
-        <div id="editSearchResult" style="max-height:400px;overflow-y:auto"></div>
-      </div>
-    </div>
+    <!-- COMPLETED ENTRY PANEL -->
  
     <!-- COMPLETED REPORT PANEL -->
     <div id="panel-completed-report" class="panel">
@@ -735,7 +710,7 @@ function renderList() {
   
   const tbody = document.getElementById('recordTableBody');
   if (!filteredRows.length) { 
-    tbody.innerHTML = '<tr><td colspan="12" class="empty">ไม่พบรายการ</td></tr>'; 
+    tbody.innerHTML = '<tr><td colspan="13" class="empty">ไม่พบรายการ</td></tr>'; 
     document.getElementById('paginationControls').innerHTML = '';
     document.getElementById('paginationInfo').textContent = '0';
     return; 
@@ -758,7 +733,8 @@ function renderList() {
       <td class="ctr">${r.survey_date||'—'}</td>
       <td style="font-size:11px">${r.officer_email||'—'}</td>
       <td style="font-size:12px;color:var(--text-muted)">${r.remarks||'—'}</td>
-      <td class="ctr" style="display:flex;gap:6px;justify-content:center;align-items:center;min-width:100px">
+      <td class="ctr" style="display:flex;gap:6px;justify-content:center;align-items:center;min-width:140px">
+        <button onclick="openCompletedForm('${r.id}', '${r.name.replace(/'/g,"\\'")}', '${r.tin}', '${r.biz_type||''}')" title="บันทึกงานเสร็จ" style="width:32px;height:32px;border:2px solid #10b981;background:transparent;border-radius:4px;color:#10b981;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s">✅</button>
         <button onclick="editRecord('${r.id}')" style="width:32px;height:32px;border:2px solid var(--primary);background:#transparent;border-radius:4px;color:var(--primary);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;hover-color:#fff;hover-background:var(--primary)">✏️</button>
         <button onclick="deleteRecord('${r.id}', '${r.tin}')" style="width:32px;height:32px;border:2px solid var(--danger);background:transparent;border-radius:4px;color:var(--danger);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s">🗑️</button>
       </td>
@@ -806,6 +782,27 @@ function selectRecord(id, name, tin, brandName) {
   document.getElementById('entryForm').classList.remove('hidden');
   switchTab('completed-entry', document.querySelectorAll('.tab-btn')[2]);
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+ 
+function openCompletedForm(id, name, tin, bizType) {
+  // เตรียมฟอร์มบันทึกงานเสร็จ
+  document.getElementById('cm_surveyId').value = id;
+  document.getElementById('infoBand').innerHTML = `
+    <div><b>ชื่อผู้ประกอบการ:</b> ${name}</div>
+    <div><b>เลขประจำตัว:</b> ${tin}</div>
+    <div><b>ประเภท:</b> ${bizType||'—'}</div>
+  `;
+  
+  // ล้างฟอร์ม
+  clearCompForm();
+  
+  // แสดงฟอร์ม
+  document.getElementById('entryForm').classList.remove('hidden');
+  document.getElementById('compSearchResult').innerHTML = '';
+  
+  // Scroll ไปยังฟอร์ม
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showAppAlert('กรุณาบันทึกข้อมูลการชำระภาษี', 'success');
 }
  
 function editRecord(id) {
