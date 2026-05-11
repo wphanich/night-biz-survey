@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>โครงการสำรวจธุรกิจกลางคืน — สำนักงานสรรพากรพื้นที่ กรุงเทพมหานคร 13</title>
+<title>โครงการสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กรุงเทพมหานคร 13</title>
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -177,7 +177,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
     <div class="login-logo">
       <div class="emblem">🏛️</div>
       <h1>กรมสรรพากร</h1>
-      <p>สำนักงานสรรพากรพื้นที่กรุงเทพมหานคร 13<br>โครงการสำรวจธุรกิจประกอบการกลางคืน</p>
+      <p>สรรพากรพื้นที่กรุงเทพมหานคร 13<br>โครงการสำรวจธุรกิจประกอบการกลางคืน</p>
     </div>
     <div class="login-divider"></div>
     <div id="loginAlert"></div>
@@ -196,7 +196,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
 <!-- APP -->
 <div id="app" class="app">
   <div class="topbar">
-    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สำนักงานสรรพากรพื้นที่ กทม.13</div>
+    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กทม.13</div>
     <div class="topbar-right">
       <span class="user-badge" id="userBadge">—</span>
       <button class="btn-logout" onclick="resetApp()">🔄 รีเฟรช</button>
@@ -224,7 +224,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
             <label>ประเภทผู้เสียภาษี <span class="required">*</span></label>
             <div style="display:flex;gap:1.25rem;margin-top:4px">
               <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="taxpayerType" value="นิติบุคคล" onchange="onTypeChange()" checked> นิติบุคคล</label>
-              <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer"><input type="radio" name="taxpayerType" value="บุคคลธรรมดา" onchange="onTypeChange()"> บุคคลธรรมดา</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="taxpayerType" value="บุคคลธรรมดา" onchange="onTypeChange()"> บุคคลธรรมดา</label>
             </div>
           </div>
           <div class="form-group">
@@ -825,6 +825,8 @@ function searchComp() {
   const ft = document.getElementById('compFilterType').value;
   const el = document.getElementById('compSearchResult');
   if (!q && !ft) { el.innerHTML = ''; return; }
+  
+  // โหลดข้อมูลล่าสุดจากสำรวจ
   const matched = allRecords.filter(r =>
     (!q || r.tin.includes(q) || r.name.toLowerCase().includes(q)) &&
     (!ft || r.type === ft)
@@ -832,9 +834,9 @@ function searchComp() {
   if (!matched.length) { el.innerHTML = '<div class="alert alert-warning">ไม่พบรายการ</div>'; return; }
   el.innerHTML = `<div class="card"><div class="card-title"><span class="dot"></span>ผลการค้นหา (${matched.length} รายการ)</div>` +
     matched.map(r => `
-      <div class="record-item" onclick="selectRecord('${r.id}', '${r.name.replace(/'/g,"\\'")}', '${r.tin}', '${r.biz_type||''}')"  style="cursor:pointer;margin-bottom:10px">
-        <div class="record-name">${r.name}</div>
-        <div class="record-sub">เลขผู้เสียภาษี: ${r.tin} · ${r.type}</div>
+      <div class="record-item" onclick="selectRecord('${r.id}', '${r.name.replace(/'/g,"\\'")}', '${r.tin}', '${r.biz_type||''}')"  style="cursor:pointer;margin-bottom:10px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:all .2s">
+        <div style="font-weight:600;margin-bottom:4px">${r.name}</div>
+        <div style="font-size:12px;color:var(--text-muted)">เลขผู้เสียภาษี: ${r.tin} · ${r.type}</div>
       </div>`).join('') + '</div>';
 }
  
@@ -1100,6 +1102,7 @@ function switchTab(name, el) {
   document.getElementById('panel-'+name).classList.add('active');
   if (el) el.classList.add('active');
   if (name === 'completed-report') loadCompleted();
+  if (name === 'completed-entry') { loadRecords(); loadCompleted(); }
 }
  
 function showLoginAlert(msg, type) {
