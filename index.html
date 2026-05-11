@@ -196,7 +196,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
 <!-- APP -->
 <div id="app" class="app">
   <div class="topbar">
-    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กทม.13</div>
+    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สำนักงานสรรพากรพื้นที่ กทม.13</div>
     <div class="topbar-right">
       <span class="user-badge" id="userBadge">—</span>
       <button class="btn-logout" onclick="resetApp()">🔄 รีเฟรช</button>
@@ -785,24 +785,17 @@ function selectRecord(id, name, tin, brandName) {
 }
  
 function openCompletedForm(id, name, tin, bizType) {
-  // เตรียมฟอร์มบันทึกงานเสร็จ
   document.getElementById('cm_surveyId').value = id;
   document.getElementById('infoBand').innerHTML = `
     <div><b>ชื่อผู้ประกอบการ:</b> ${name}</div>
     <div><b>เลขประจำตัว:</b> ${tin}</div>
     <div><b>ประเภท:</b> ${bizType||'—'}</div>
   `;
-  
-  // ล้างฟอร์ม
   clearCompForm();
-  
-  // แสดงฟอร์ม
   document.getElementById('entryForm').classList.remove('hidden');
-  document.getElementById('compSearchResult').innerHTML = '';
-  
-  // Scroll ไปยังฟอร์ม
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  showAppAlert('กรุณาบันทึกข้อมูลการชำระภาษี', 'success');
+  window.editingCompId = null;
+  window.scrollTo({ top: document.getElementById('entryForm').offsetTop - 20, behavior: 'smooth' });
+  showAppAlert('กรุณากรอกข้อมูลการชำระภาษี', 'success');
 }
  
 function editRecord(id) {
