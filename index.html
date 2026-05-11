@@ -1026,7 +1026,7 @@ function clearCompForm() {
     if (e) e.value = '';
   });
   document.getElementById('cm_payDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('entryForm').classList.add('hidden');
+  calcSum();
 }
  
 async function saveCompleted() {
