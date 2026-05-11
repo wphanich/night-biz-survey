@@ -448,19 +448,19 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
                 <th rowspan="2" style="min-width:125px">เลขประจำตัว</th>
                 <th rowspan="2" style="min-width:130px">ชื่อสถาน</th>
                 <th rowspan="2" style="min-width:105px">วันที่ชำระ</th>
-                <th colspan="4">ภษ.บุคคลธรรมดา</th>
-                <th colspan="4">ภษ.นิติบุคคล</th>
-                <th colspan="4">VAT</th>
-                <th colspan="4">ธุรกิจเฉพาะ</th>
-                <th colspan="4">อากรแสตมป์</th>
+                <th colspan="2">ภษ.บุคคลธรรมดา</th>
+                <th colspan="2">ภษ.นิติบุคคล</th>
+                <th colspan="2">VAT</th>
+                <th colspan="2">ธุรกิจเฉพาะ</th>
+                <th colspan="2">อากรแสตมป์</th>
                 <th rowspan="2" style="min-width:110px">รวม</th>
               </tr>
               <tr>
-                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
-                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
-                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
-                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
-                <th>ภาษี</th><th>เบี้ยปรับ</th><th>เงินเพิ่ม</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>ค่าปรับ</th>
+                <th>ภาษี</th><th>ค่าปรับ</th>
               </tr>
             </thead>
             <tbody id="tbodyComp">
@@ -786,11 +786,22 @@ async function loadCompleted() {
  
 function renderCompTable() {
   const fmt = n => n ? Number(n).toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '—';
-  const gt = r => [r.pit_tax,r.pit_fine,r.pit_sur,r.pit_pen, r.cit_tax,r.cit_fine,r.cit_sur,r.cit_pen,
-    r.vat_tax,r.vat_fine,r.vat_sur,r.vat_pen, r.sbt_tax,r.sbt_fine,r.sbt_sur,r.sbt_pen,
-    r.stm_tax,r.stm_fine,r.stm_sur,r.stm_pen].reduce((a,b)=>a+(parseFloat(b)||0),0);
+  
+  // คำนวณรวมภาษี = ภาษี + เบี้ยปรับ + เงินเพิ่ม ต่อประเภท
+  const calcTax = (tax, fine, sur) => (parseFloat(tax)||0) + (parseFloat(fine)||0) + (parseFloat(sur)||0);
+  const sbt_rch = (tax, fine, sur) => calcTax(tax, fine, sur) * 0.10;
+  
+  const gt = r => {
+    const pit = calcTax(r.pit_tax, r.pit_fine, r.pit_sur) + (parseFloat(r.pit_pen)||0);
+    const cit = calcTax(r.cit_tax, r.cit_fine, r.cit_sur) + (parseFloat(r.cit_pen)||0);
+    const vat = calcTax(r.vat_tax, r.vat_fine, r.vat_sur) + (parseFloat(r.vat_pen)||0);
+    const sbt = calcTax(r.sbt_tax, r.sbt_fine, r.sbt_sur) + sbt_rch(r.sbt_tax, r.sbt_fine, r.sbt_sur) + (parseFloat(r.sbt_pen)||0);
+    const stm = calcTax(r.stm_tax, r.stm_fine, r.stm_sur) + (parseFloat(r.stm_pen)||0);
+    return pit + cit + vat + sbt + stm;
+  };
+  
   const tbody = document.getElementById('tbodyComp');
-  if (!compRecords.length) { tbody.innerHTML = '<tr><td colspan="27" class="empty">ไม่มีข้อมูล</td></tr>'; return; }
+  if (!compRecords.length) { tbody.innerHTML = '<tr><td colspan="15" class="empty">ไม่มีข้อมูล</td></tr>'; return; }
   tbody.innerHTML = compRecords.map((r,i) => `
     <tr>
       <td class="ctr">${i+1}</td>
@@ -798,11 +809,11 @@ function renderCompTable() {
       <td class="ctr">${r.nightbiz_survey?.tin||'—'}</td>
       <td>${r.nightbiz_survey?.biz_type||'—'}</td>
       <td class="ctr">${r.pay_date||'—'}</td>
-      <td class="num tax-col">${fmt(r.pit_tax)}</td><td class="num tax-col">${fmt(r.pit_fine)}</td><td class="num tax-col">${fmt(r.pit_sur)}</td><td class="num tax-col">${fmt(r.pit_pen)}</td>
-      <td class="num tax-col">${fmt(r.cit_tax)}</td><td class="num tax-col">${fmt(r.cit_fine)}</td><td class="num tax-col">${fmt(r.cit_sur)}</td><td class="num tax-col">${fmt(r.cit_pen)}</td>
-      <td class="num tax-col">${fmt(r.vat_tax)}</td><td class="num tax-col">${fmt(r.vat_fine)}</td><td class="num tax-col">${fmt(r.vat_sur)}</td><td class="num tax-col">${fmt(r.vat_pen)}</td>
-      <td class="num tax-col">${fmt(r.sbt_tax)}</td><td class="num tax-col">${fmt(r.sbt_fine)}</td><td class="num tax-col">${fmt(r.sbt_sur)}</td><td class="num tax-col">${fmt(r.sbt_pen)}</td>
-      <td class="num tax-col">${fmt(r.stm_tax)}</td><td class="num tax-col">${fmt(r.stm_fine)}</td><td class="num tax-col">${fmt(r.stm_sur)}</td><td class="num tax-col">${fmt(r.stm_pen)}</td>
+      <td class="num tax-col">${fmt(calcTax(r.pit_tax, r.pit_fine, r.pit_sur))}</td><td class="num tax-col">${fmt(r.pit_pen)}</td>
+      <td class="num tax-col">${fmt(calcTax(r.cit_tax, r.cit_fine, r.cit_sur))}</td><td class="num tax-col">${fmt(r.cit_pen)}</td>
+      <td class="num tax-col">${fmt(calcTax(r.vat_tax, r.vat_fine, r.vat_sur))}</td><td class="num tax-col">${fmt(r.vat_pen)}</td>
+      <td class="num tax-col">${fmt(calcTax(r.sbt_tax, r.sbt_fine, r.sbt_sur) + sbt_rch(r.sbt_tax, r.sbt_fine, r.sbt_sur))}</td><td class="num tax-col">${fmt(r.sbt_pen)}</td>
+      <td class="num tax-col">${fmt(calcTax(r.stm_tax, r.stm_fine, r.stm_sur))}</td><td class="num tax-col">${fmt(r.stm_pen)}</td>
       <td class="num" style="background:#e8f5ee;font-weight:600">${fmt(gt(r))}</td>
     </tr>`).join('');
   document.getElementById('comp-count').textContent = compRecords.length;
