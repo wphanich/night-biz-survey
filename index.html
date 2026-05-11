@@ -803,6 +803,53 @@ function calcSum() {
   document.getElementById('total_sum').textContent = total.toLocaleString('th-TH', { minimumFractionDigits: 2 });
 }
  
+function editCompleted(compId) {
+  const comp = compRecords.find(r => r.id === compId);
+  if (!comp) { showAppAlert('ไม่พบข้อมูล','error'); return; }
+  
+  // โหลดข้อมูลเก่า
+  document.getElementById('cm_surveyId').value = comp.survey_id;
+  document.getElementById('cm_payDate').value = comp.pay_date;
+  document.getElementById('cm_pit_tax').value = comp.pit_tax || 0;
+  document.getElementById('cm_pit_fine').value = comp.pit_fine || 0;
+  document.getElementById('cm_pit_sur').value = comp.pit_sur || 0;
+  document.getElementById('cm_pit_pen').value = comp.pit_pen || 0;
+  document.getElementById('cm_cit_tax').value = comp.cit_tax || 0;
+  document.getElementById('cm_cit_fine').value = comp.cit_fine || 0;
+  document.getElementById('cm_cit_sur').value = comp.cit_sur || 0;
+  document.getElementById('cm_cit_pen').value = comp.cit_pen || 0;
+  document.getElementById('cm_vat_tax').value = comp.vat_tax || 0;
+  document.getElementById('cm_vat_fine').value = comp.vat_fine || 0;
+  document.getElementById('cm_vat_sur').value = comp.vat_sur || 0;
+  document.getElementById('cm_vat_pen').value = comp.vat_pen || 0;
+  document.getElementById('cm_sbt_tax').value = comp.sbt_tax || 0;
+  document.getElementById('cm_sbt_fine').value = comp.sbt_fine || 0;
+  document.getElementById('cm_sbt_sur').value = comp.sbt_sur || 0;
+  document.getElementById('cm_sbt_pen').value = comp.sbt_pen || 0;
+  document.getElementById('cm_stm_tax').value = comp.stm_tax || 0;
+  document.getElementById('cm_stm_fine').value = comp.stm_fine || 0;
+  document.getElementById('cm_stm_sur').value = comp.stm_sur || 0;
+  document.getElementById('cm_stm_pen').value = comp.stm_pen || 0;
+  document.getElementById('cm_remarks').value = comp.remarks || '';
+  
+  // เก็บ ID สำหรับแก้ไข
+  window.editingCompId = compId;
+  
+  // เรียกข้อมูลผู้ประกอบการ
+  const survey = comp.nightbiz_survey;
+  if (survey) {
+    document.getElementById('infoBand').innerHTML = `
+      <div><b>ชื่อผู้ประกอบการ:</b> ${survey.name}</div>
+      <div><b>เลขประจำตัว:</b> ${survey.tin}</div>
+      <div><b>ประเภท:</b> ${survey.biz_type}</div>
+    `;
+  }
+  
+  calcSum();
+  showAppAlert('กำลังแก้ไขข้อมูลเดิม','success');
+  window.scrollTo(0, 0);
+}
+ 
 function clearCompForm() {
   ['cm_payDate','cm_pit_tax','cm_pit_fine','cm_pit_sur','cm_pit_pen','cm_cit_tax','cm_cit_fine','cm_cit_sur','cm_cit_pen',
    'cm_vat_tax','cm_vat_fine','cm_vat_sur','cm_vat_pen','cm_sbt_tax','cm_sbt_fine','cm_sbt_sur','cm_sbt_pen',
@@ -826,14 +873,28 @@ async function saveCompleted() {
     vat_tax: gn('cm_vat_tax'), vat_fine: gn('cm_vat_fine'), vat_sur: gn('cm_vat_sur'), vat_pen: gn('cm_vat_pen'),
     sbt_tax: gn('cm_sbt_tax'), sbt_fine: gn('cm_sbt_fine'), sbt_sur: gn('cm_sbt_sur'), sbt_pen: gn('cm_sbt_pen'),
     stm_tax: gn('cm_stm_tax'), stm_fine: gn('cm_stm_fine'), stm_sur: gn('cm_stm_sur'), stm_pen: gn('cm_stm_pen'),
-    remarks: gv('cm_remarks'), officer_email: currentUser.email, created_at: new Date().toISOString()
+    remarks: gv('cm_remarks'), officer_email: currentUser.email
   };
  
-  const { error } = await sb.from('nightbiz_completed').insert([payload]);
-  if (error) { showAppAlert('บันทึกไม่สำเร็จ: '+error.message,'error'); return; }
-  showAppAlert('บันทึกเสร็จแล้ว','success');
-  clearCompForm();
-  await loadCompleted();
+  let error;
+  if (window.editingCompId) {
+    // อัปเดตข้อมูลเดิม
+    const result = await sb.from('nightbiz_completed').update(payload).eq('id', window.editingCompId);
+    error = result.error;
+    showAppAlert(error ? 'แก้ไขไม่สำเร็จ: '+error.message : 'แก้ไขเสร็จแล้ว', error ? 'error' : 'success');
+    window.editingCompId = null;
+  } else {
+    // บันทึกข้อมูลใหม่
+    payload.created_at = new Date().toISOString();
+    const result = await sb.from('nightbiz_completed').insert([payload]);
+    error = result.error;
+    showAppAlert(error ? 'บันทึกไม่สำเร็จ: '+error.message : 'บันทึกเสร็จแล้ว', error ? 'error' : 'success');
+  }
+  
+  if (!error) {
+    clearCompForm();
+    await loadCompleted();
+  }
 }
  
 async function loadCompleted() {
@@ -860,7 +921,7 @@ function renderCompTable() {
   };
   
   const tbody = document.getElementById('tbodyComp');
-  if (!compRecords.length) { tbody.innerHTML = '<tr><td colspan="15" class="empty">ไม่มีข้อมูล</td></tr>'; return; }
+  if (!compRecords.length) { tbody.innerHTML = '<tr><td colspan="16" class="empty">ไม่มีข้อมูล</td></tr>'; return; }
   tbody.innerHTML = compRecords.map((r,i) => `
     <tr>
       <td class="ctr">${i+1}</td>
@@ -874,6 +935,7 @@ function renderCompTable() {
       <td class="num tax-col">${fmt(calcTax(r.sbt_tax, r.sbt_fine, r.sbt_sur) + sbt_rch(r.sbt_tax, r.sbt_fine, r.sbt_sur))}</td><td class="num tax-col">${fmt(r.sbt_pen)}</td>
       <td class="num tax-col">${fmt(calcTax(r.stm_tax, r.stm_fine, r.stm_sur))}</td><td class="num tax-col">${fmt(r.stm_pen)}</td>
       <td class="num" style="background:#e8f5ee;font-weight:600">${fmt(gt(r))}</td>
+      <td class="ctr no-print"><button class="btn btn-outline btn-sm" onclick="editCompleted('${r.id}')">✏️ แก้ไข</button></td>
     </tr>`).join('');
   document.getElementById('comp-count').textContent = compRecords.length;
 }
