@@ -472,6 +472,15 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
           <button class="btn btn-outline" onclick="clearCompForm()">ล้างแบบฟอร์ม</button>
         </div>
       </div>
+ 
+      <div class="card" style="margin-top:2rem">
+        <div class="card-title"><span class="dot"></span>แก้ไขข้อมูลที่บันทึกแล้ว</div>
+        <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap">
+          <input type="text" id="editSearchQ" placeholder="ค้นหาผู้ประกอบการ / เลขประจำตัว..." style="flex:1;min-width:200px;border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;font-size:14px;font-family:'Sarabun',sans-serif" oninput="searchEditRecords()">
+          <button class="btn btn-outline btn-sm" onclick="loadCompleted()">🔄 รีเฟรช</button>
+        </div>
+        <div id="editSearchResult" style="max-height:400px;overflow-y:auto"></div>
+      </div>
     </div>
  
     <!-- COMPLETED REPORT PANEL -->
@@ -803,7 +812,32 @@ function calcSum() {
   document.getElementById('total_sum').textContent = total.toLocaleString('th-TH', { minimumFractionDigits: 2 });
 }
  
-function editCompleted(compId) {
+function searchEditRecords() {
+  const q = document.getElementById('editSearchQ').value.toLowerCase();
+  const filtered = compRecords.filter(r => {
+    const name = r.nightbiz_survey?.name?.toLowerCase() || '';
+    const tin = r.nightbiz_survey?.tin?.toLowerCase() || '';
+    return name.includes(q) || tin.includes(q);
+  });
+  
+  const html = filtered.length ? `
+    <div style="display:grid;gap:8px">
+      ${filtered.map(r => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);gap:8px">
+          <div style="flex:1">
+            <div style="font-weight:600;margin-bottom:4px">${r.nightbiz_survey?.name||'—'}</div>
+            <div style="font-size:12px;color:var(--text-muted)">เลขที่: ${r.nightbiz_survey?.tin||'—'} | วันที่: ${r.pay_date||'—'}</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="editCompRecord('${r.id}')">✏️ แก้ไข</button>
+        </div>
+      `).join('')}
+    </div>
+  ` : '<p style="text-align:center;color:var(--text-muted)">ไม่พบข้อมูล</p>';
+  
+  document.getElementById('editSearchResult').innerHTML = html;
+}
+ 
+function editCompRecord(compId) {
   const comp = compRecords.find(r => r.id === compId);
   if (!comp) { showAppAlert('ไม่พบข้อมูล','error'); return; }
   
@@ -842,11 +876,12 @@ function editCompleted(compId) {
       <div><b>ชื่อผู้ประกอบการ:</b> ${survey.name}</div>
       <div><b>เลขประจำตัว:</b> ${survey.tin}</div>
       <div><b>ประเภท:</b> ${survey.biz_type}</div>
+      <div style="color:#f59e0b;font-weight:600;margin-top:8px">⚠️ กำลังแก้ไขข้อมูลเดิม</div>
     `;
   }
   
   calcSum();
-  showAppAlert('กำลังแก้ไขข้อมูลเดิม','success');
+  showAppAlert('โหลดข้อมูลเดิมเสร็จแล้ว','success');
   window.scrollTo(0, 0);
 }
  
@@ -935,7 +970,6 @@ function renderCompTable() {
       <td class="num tax-col">${fmt(calcTax(r.sbt_tax, r.sbt_fine, r.sbt_sur) + sbt_rch(r.sbt_tax, r.sbt_fine, r.sbt_sur))}</td><td class="num tax-col">${fmt(r.sbt_pen)}</td>
       <td class="num tax-col">${fmt(calcTax(r.stm_tax, r.stm_fine, r.stm_sur))}</td><td class="num tax-col">${fmt(r.stm_pen)}</td>
       <td class="num" style="background:#e8f5ee;font-weight:600">${fmt(gt(r))}</td>
-      <td class="ctr no-print"><button class="btn btn-outline btn-sm" onclick="editCompleted('${r.id}')">✏️ แก้ไข</button></td>
     </tr>`).join('');
   document.getElementById('comp-count').textContent = compRecords.length;
 }
