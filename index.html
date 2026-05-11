@@ -196,7 +196,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
 <!-- APP -->
 <div id="app" class="app">
   <div class="topbar">
-    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กทม.13</div>
+    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สำนักงานสรรพากรพื้นที่ กทม.13</div>
     <div class="topbar-right">
       <span class="user-badge" id="userBadge">—</span>
       <button class="btn-logout" onclick="resetApp()">🔄 รีเฟรช</button>
@@ -692,6 +692,12 @@ async function loadRecords() {
   renderList();
 }
  
+async function loadRecordsOnly() {
+  const { data, error } = await sb.from('nightbiz_survey').select('*').order('created_at', { ascending: false });
+  if (error) { showAppAlert('โหลดข้อมูลไม่สำเร็จ','error'); return; }
+  allRecords = data || [];
+}
+ 
 function renderList() {
   const q  = document.getElementById('searchQ').value.toLowerCase().trim();
   const ft = document.getElementById('filterType').value;
@@ -1102,7 +1108,10 @@ function switchTab(name, el) {
   document.getElementById('panel-'+name).classList.add('active');
   if (el) el.classList.add('active');
   if (name === 'completed-report') loadCompleted();
-  if (name === 'completed-entry') { loadRecords(); loadCompleted(); }
+  if (name === 'completed-entry') { 
+    loadRecordsOnly(); 
+    loadCompleted(); 
+  }
 }
  
 function showLoginAlert(msg, type) {
