@@ -518,8 +518,7 @@ async function saveRecord() {
   const editId = document.querySelector('.tab-btn.active')?.dataset.editId || document.getElementById('saveBtn')?.dataset.editId;
   
   if (!editId) {
-    const { data:dup } = await sb.from('nightbiz_survey').select('id').eq('tin', tin);
-    if (dup && dup.length > 0) { showAppAlert('เลขผู้เสียภาษี '+tin+' มีในระบบแล้ว','error'); return; }
+    // Allow duplicate TIN entries - no validation check
   }
  
   const payload = {
