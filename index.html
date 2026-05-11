@@ -114,8 +114,37 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
  
 @media print {
   .topbar, .tabs-bar, .no-print { display: none; }
-  body { margin: 0; }
+  body { margin: 0; padding: 0; }
+  
+  .print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-family: 'Sarabun', sans-serif;
+    line-height: 1.8;
+  }
+  .print-header .title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .print-header .subtitle { font-size: 13px; margin-bottom: 6px; }
+  .print-header .org { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .print-header .team { font-size: 13px; }
+  
+  .work-table { 
+    font-size: 11px;
+    width: 100%;
+  }
+  .work-table th, .work-table td { 
+    padding: 5px 3px;
+  }
+  .work-table th {
+    line-height: 1.2;
+  }
+  
+  @page {
+    size: A4 landscape;
+    margin: 0.5cm;
+  }
 }
+ 
 </style>
 </head>
 <body>
@@ -438,6 +467,14 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
         <p style="text-align:center;color:var(--text-muted);margin-bottom:15px;font-size:13px">
           โครงการสำรวจธุรกิจประกอบการกลางคืน · สรรพากรพื้นที่กรุงเทพมหานคร 13
         </p>
+ 
+        <!-- PRINT HEADER -->
+        <div class="print-header" style="display:none">
+          <div class="title">รายงานผลการปฏิบัติงานสำรวจ ประจำเดือนภาษี............................</div>
+          <div class="subtitle">ทีมสำรวจผู้ประกอบการ ตามโครงการสำรวจธุรกิจที่ประกอบกิจการในเวลากลางคืน</div>
+          <div class="org">สำนักงานสรรพากรพื้นที่กรุงเทพมหานคร 13</div>
+          <div class="team">สายสำรวจที่ 3</div>
+        </div>
  
         <div class="tbl-wrap">
           <table class="work-table">
