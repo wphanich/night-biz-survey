@@ -296,6 +296,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
           <option value="">VAT ทุกสถานะ</option><option>จดทะเบียน VAT</option><option>ไม่จดทะเบียน VAT</option>
         </select>
         <button class="btn btn-outline btn-sm" onclick="loadRecords()">🔄 รีเฟรช</button>
+        <button class="btn btn-success btn-sm" onclick="exportListCSV()">📥 Export CSV</button>
       </div>
       <div class="tbl-wrap">
         <table class="work-table" style="min-width:1200px">
@@ -730,6 +731,29 @@ function renderCompTable() {
       <td class="num" style="background:#e8f5ee;font-weight:600">${fmt(gt(r))}</td>
     </tr>`).join('');
   document.getElementById('comp-count').textContent = compRecords.length;
+}
+ 
+function exportListCSV() {
+  // Get filtered records from current view
+  const q = document.getElementById('searchQ').value.toLowerCase();
+  const typeFilter = document.getElementById('filterType').value;
+  const vatFilter = document.getElementById('filterVAT').value;
+  
+  const filtered = allRecords.filter(r =>
+    (!q || r.name.toLowerCase().includes(q) || r.tin.includes(q)) &&
+    (!typeFilter || r.type === typeFilter) &&
+    (!vatFilter || r.vat_status === vatFilter)
+  );
+  
+  if (!filtered.length) { showAppAlert('ไม่มีข้อมูล','error'); return; }
+  
+  const h = ['ลำดับ','ประเภท','เลขผู้เสียภาษี','ชื่อผู้ประกอบการ','ชื่อสถานประกอบการ','ประเภทกิจการ','ที่อยู่','แขวง','เขต','จังหวัด','รหัสไปรษณีย์','หมายเหตุสถานที่','สถานะ VAT','เลขประจำตัว VAT','วันที่จดทะเบียน VAT','ลักษณะการส่ง VAT','ยอดขายรายสินค้า','วันที่สำรวจ','เจ้าหน้าที่','หน่วยงาน','ระดับความเสี่ยง','หมายเหตุ'];
+  const rows = filtered.map((r,i) => [i+1,r.type,r.tin,r.name,r.biz_type,r.address,r.subdistrict,r.district,r.province,r.postal_code,r.location_note,r.vat_status,r.vat_number,r.vat_reg_date,r.vat_period,r.vat_sales,r.survey_date,r.officer_email,r.officer_unit,r.risk_level,r.remarks].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(','));
+  const csv = '\uFEFF'+[h.join(','),...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'nightbiz_list_'+Date.now()+'.csv';
+  a.click();
 }
  
 function exportSurveyCSV() {
