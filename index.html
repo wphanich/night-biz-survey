@@ -1172,6 +1172,7 @@ function exportCompCSV() {
 }
  
 function switchTab(name, el) {
+  console.log('switchTab called with name:', name);
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
@@ -1179,7 +1180,11 @@ function switchTab(name, el) {
   
   // โหลดข้อมูลตามแท็บ
   if (name === 'completed-report') {
-    setTimeout(() => loadCompleted(), 100);
+    console.log('Calling loadCompleted for completed-report tab');
+    setTimeout(() => {
+      console.log('setTimeout fired, calling loadCompleted');
+      loadCompleted();
+    }, 100);
   }
   if (name === 'completed-entry') { 
     loadRecordsOnly(); 
