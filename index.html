@@ -177,7 +177,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
     <div class="login-logo">
       <div class="emblem">🏛️</div>
       <h1>กรมสรรพากร</h1>
-      <p>สรรพากรพื้นที่กรุงเทพมหานคร 13<br>โครงการสำรวจธุรกิจประกอบการกลางคืน</p>
+      <p>สำนักงานสรรพากรพื้นที่กรุงเทพมหานคร 13<br>โครงการสำรวจธุรกิจประกอบการกลางคืน</p>
     </div>
     <div class="login-divider"></div>
     <div id="loginAlert"></div>
@@ -196,7 +196,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
 <!-- APP -->
 <div id="app" class="app">
   <div class="topbar">
-    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กทม.13</div>
+    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สำนักงานสรรพากรพื้นที่ กทม.13</div>
     <div class="topbar-right">
       <span class="user-badge" id="userBadge">—</span>
       <button class="btn-logout" onclick="resetApp()">🔄 รีเฟรช</button>
@@ -1062,6 +1062,10 @@ async function saveCompleted() {
   if (!error) {
     clearCompForm();
     await loadCompleted();
+    // สลับไปแสดงที่ tab รายงานงานเสร็จ
+    const reportBtn = document.querySelector('.tab-btn[onclick*="completed-report"]');
+    switchTab('completed-report', reportBtn);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
  
@@ -1177,19 +1181,7 @@ function switchTab(name, el) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
   if (el) el.classList.add('active');
-  
-  // โหลดข้อมูลตามแท็บ
-  if (name === 'completed-report') {
-    console.log('Calling loadCompleted for completed-report tab');
-    setTimeout(() => {
-      console.log('setTimeout fired, calling loadCompleted');
-      loadCompleted();
-    }, 100);
-  }
-  if (name === 'completed-entry') { 
-    loadRecordsOnly(); 
-    loadCompleted(); 
-  }
+  if (name === 'completed-report') loadCompleted();
 }
  
 function showLoginAlert(msg, type) {
