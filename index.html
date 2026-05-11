@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>โครงการสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กรุงเทพมหานคร 13</title>
+<title>โครงการสำรวจธุรกิจกลางคืน — สำนักงานสรรพากรพื้นที่ กรุงเทพมหานคร 13</title>
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -177,7 +177,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
     <div class="login-logo">
       <div class="emblem">🏛️</div>
       <h1>กรมสรรพากร</h1>
-      <p>สรรพากรพื้นที่กรุงเทพมหานคร 13<br>โครงการสำรวจธุรกิจประกอบการกลางคืน</p>
+      <p>สำนักงานสรรพากรพื้นที่กรุงเทพมหานคร 13<br>โครงการสำรวจธุรกิจประกอบการกลางคืน</p>
     </div>
     <div class="login-divider"></div>
     <div id="loginAlert"></div>
@@ -196,7 +196,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
 <!-- APP -->
 <div id="app" class="app">
   <div class="topbar">
-    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กทม.13</div>
+    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สำนักงานสรรพากรพื้นที่ กทม.13</div>
     <div class="topbar-right">
       <span class="user-badge" id="userBadge">—</span>
       <button class="btn-logout" onclick="resetApp()">🔄 รีเฟรช</button>
@@ -224,7 +224,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
             <label>ประเภทผู้เสียภาษี <span class="required">*</span></label>
             <div style="display:flex;gap:1.25rem;margin-top:4px">
               <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="taxpayerType" value="นิติบุคคล" onchange="onTypeChange()" checked> นิติบุคคล</label>
-              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="radio" name="taxpayerType" value="บุคคลธรรมดา" onchange="onTypeChange()"> บุคคลธรรมดา</label>
+              <label style="display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer"><input type="radio" name="taxpayerType" value="บุคคลธรรมดา" onchange="onTypeChange()"> บุคคลธรรมดา</label>
             </div>
           </div>
           <div class="form-group">
@@ -372,7 +372,14 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
           </tbody>
         </table>
       </div>
-    </div>
+ 
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding:1rem;background:rgba(59,130,246,.08);border-radius:var(--radius-lg);border:1px solid var(--primary)">
+        <div style="font-size:14px;color:var(--text-muted)">
+          แสดงข้อมูล <span id="paginationInfo" style="font-weight:600;color:var(--primary)">0</span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center" id="paginationControls">
+        </div>
+      </div>
  
     <!-- COMPLETED ENTRY PANEL -->
     <div id="panel-completed-entry" class="panel">
@@ -689,19 +696,35 @@ function renderList() {
   const q  = document.getElementById('searchQ').value.toLowerCase().trim();
   const ft = document.getElementById('filterType').value;
   const fv = document.getElementById('filterVAT').value;
-  const rows = allRecords.filter(r =>
+  const filteredRows = allRecords.filter(r =>
     (!q  || r.name.toLowerCase().includes(q) || r.tin.includes(q)) &&
     (!ft || r.type === ft) && (!fv || r.vat_status === fv)
   );
-  const tbody = document.getElementById('recordTableBody');
+  
   document.getElementById('s-total').textContent = allRecords.length;
   document.getElementById('s-juristic').textContent = allRecords.filter(r => r.type === 'นิติบุคคล').length;
   document.getElementById('s-personal').textContent = allRecords.filter(r => r.type === 'บุคคลธรรมดา').length;
   document.getElementById('s-vat').textContent = allRecords.filter(r => r.vat_status === 'จดทะเบียน VAT').length;
-  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="12" class="empty">ไม่พบรายการ</td></tr>'; return; }
-  tbody.innerHTML = rows.map((r,i) => `
+  
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+  window.currentListPage = window.currentListPage || 1;
+  
+  const tbody = document.getElementById('recordTableBody');
+  if (!filteredRows.length) { 
+    tbody.innerHTML = '<tr><td colspan="12" class="empty">ไม่พบรายการ</td></tr>'; 
+    document.getElementById('paginationControls').innerHTML = '';
+    document.getElementById('paginationInfo').textContent = '0';
+    return; 
+  }
+  
+  const startIdx = (window.currentListPage - 1) * itemsPerPage;
+  const endIdx = startIdx + itemsPerPage;
+  const pageRows = filteredRows.slice(startIdx, endIdx);
+  
+  tbody.innerHTML = pageRows.map((r,i) => `
     <tr>
-      <td class="ctr">${i+1}</td>
+      <td class="ctr">${startIdx + i + 1}</td>
       <td>${r.name}</td>
       <td class="ctr" style="font-family:monospace;font-size:12px">${r.tin}</td>
       <td>${r.biz_type||'—'}</td>
@@ -717,6 +740,38 @@ function renderList() {
         <button onclick="deleteRecord('${r.id}', '${r.tin}')" style="width:32px;height:32px;border:2px solid var(--danger);background:transparent;border-radius:4px;color:var(--danger);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s">🗑️</button>
       </td>
     </tr>`).join('');
+  
+  // สร้าง Pagination controls
+  let paginationHTML = '';
+  if (window.currentListPage > 1) {
+    paginationHTML += '<button class="btn btn-outline btn-sm" onclick="goListPage(1)">« แรก</button>';
+    paginationHTML += '<button class="btn btn-outline btn-sm" onclick="goListPage(' + (window.currentListPage - 1) + ')">‹ ก่อนหน้า</button>';
+  }
+  
+  const maxPageButtons = 5;
+  const startPage = Math.max(1, window.currentListPage - Math.floor(maxPageButtons / 2));
+  const endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+  
+  for (let p = startPage; p <= endPage; p++) {
+    if (p === window.currentListPage) {
+      paginationHTML += '<button class="btn btn-primary btn-sm" style="font-weight:700">' + p + '</button>';
+    } else {
+      paginationHTML += '<button class="btn btn-outline btn-sm" onclick="goListPage(' + p + ')">' + p + '</button>';
+    }
+  }
+  
+  if (window.currentListPage < totalPages) {
+    paginationHTML += '<button class="btn btn-outline btn-sm" onclick="goListPage(' + (window.currentListPage + 1) + ')">ถัดไป ›</button>';
+    paginationHTML += '<button class="btn btn-outline btn-sm" onclick="goListPage(' + totalPages + ')">สุดท้าย »</button>';
+  }
+  
+  document.getElementById('paginationControls').innerHTML = paginationHTML;
+  document.getElementById('paginationInfo').textContent = `${startIdx + 1}-${Math.min(endIdx, filteredRows.length)} จากทั้งหมด ${filteredRows.length} รายการ`;
+}
+ 
+function goListPage(page) {
+  window.currentListPage = page;
+  renderList();
 }
  
 function selectRecord(id, name, tin, brandName) {
