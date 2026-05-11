@@ -196,7 +196,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
 <!-- APP -->
 <div id="app" class="app">
   <div class="topbar">
-    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กทม.13</div>
+    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สำนักงานสรรพากรพื้นที่ กทม.13</div>
     <div class="topbar-right">
       <span class="user-badge" id="userBadge">—</span>
       <button class="btn-logout" onclick="resetApp()">🔄 รีเฟรช</button>
@@ -521,7 +521,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
               </tr>
             </thead>
             <tbody id="tbodyComp">
-              <tr><td colspan="27" class="loading">กำลังโหลด...</td></tr>
+              <tr><td colspan="16" class="loading">กำลังโหลด...</td></tr>
             </tbody>
           </table>
         </div>
@@ -1158,7 +1158,11 @@ function switchTab(name, el) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
   if (el) el.classList.add('active');
-  if (name === 'completed-report') loadCompleted();
+  
+  // โหลดข้อมูลตามแท็บ
+  if (name === 'completed-report') {
+    setTimeout(() => loadCompleted(), 100);
+  }
   if (name === 'completed-entry') { 
     loadRecordsOnly(); 
     loadCompleted(); 
