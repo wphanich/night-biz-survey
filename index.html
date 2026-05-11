@@ -177,7 +177,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
     <div class="login-logo">
       <div class="emblem">🏛️</div>
       <h1>กรมสรรพากร</h1>
-      <p>สำนักงานสรรพากรพื้นที่กรุงเทพมหานคร 13<br>โครงการสำรวจธุรกิจประกอบการกลางคืน</p>
+      <p>สรรพากรพื้นที่กรุงเทพมหานคร 13<br>โครงการสำรวจธุรกิจประกอบการกลางคืน</p>
     </div>
     <div class="login-divider"></div>
     <div id="loginAlert"></div>
@@ -196,7 +196,7 @@ button[onclick*="deleteRecord"]:hover{background:var(--danger)!important;color:#
 <!-- APP -->
 <div id="app" class="app">
   <div class="topbar">
-    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สำนักงานสรรพากรพื้นที่ กทม.13</div>
+    <div class="topbar-brand">🏛️ ระบบสำรวจธุรกิจกลางคืน — สรรพากรพื้นที่ กทม.13</div>
     <div class="topbar-right">
       <span class="user-badge" id="userBadge">—</span>
       <button class="btn-logout" onclick="resetApp()">🔄 รีเฟรช</button>
@@ -700,17 +700,18 @@ async function loadRecords() {
  
 async function loadRecordsOnly() {
   try {
+    console.log('Loading records from Supabase...');
     const { data, error } = await sb.from('nightbiz_survey').select('*').order('created_at', { ascending: false });
     if (error) { 
       console.error('Error loading records:', error);
-      showAppAlert('โหลดข้อมูลไม่สำเร็จ: '+error.message,'error'); 
+      showAppAlert('⚠️ Supabase Error: '+error.message,'error'); 
       return; 
     }
     allRecords = data || [];
-    console.log('Loaded records:', allRecords.length);
+    console.log('✓ Loaded ' + allRecords.length + ' records');
   } catch (err) {
     console.error('Exception loading records:', err);
-    showAppAlert('เกิดข้อผิดพลาด: '+err.message,'error');
+    showAppAlert('⚠️ Exception: '+err.message,'error');
   }
 }
  
@@ -847,6 +848,8 @@ async function searchComp() {
   const ft = document.getElementById('compFilterType').value;
   const el = document.getElementById('compSearchResult');
   
+  console.log('searchComp called:', {q, ft, recordsCount: allRecords.length});
+  
   // ถ้าว่างเปล่า ให้แสดงข้อความแนะนำ
   if (!q && !ft) { 
     el.innerHTML = `
@@ -863,29 +866,35 @@ async function searchComp() {
   
   // ถ้า allRecords ว่าง ให้โหลดข้อมูลก่อน
   if (!allRecords || allRecords.length === 0) {
-    el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted)">กำลังโหลดข้อมูล...</div>';
+    el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted)">🔄 กำลังโหลดข้อมูล...</div>';
     await loadRecordsOnly();
+    // รอสักครู่ให้ Supabase ทำงาน
+    await new Promise(r => setTimeout(r, 500));
   }
   
   // ตรวจสอบว่ามีข้อมูลหรือไม่
   if (!allRecords || allRecords.length === 0) {
-    el.innerHTML = '<div class="alert alert-danger" style="margin:0">ไม่พบข้อมูลผู้ประกอบการในระบบ</div>';
+    el.innerHTML = '<div class="alert alert-danger" style="margin:0">❌ ไม่พบข้อมูลผู้ประกอบการในระบบ</div>';
+    console.error('No records after loading');
     return;
   }
   
+  console.log('Searching in', allRecords.length, 'records');
   const matched = allRecords.filter(r =>
     (!q || r.tin.toLowerCase().includes(q) || r.name.toLowerCase().includes(q)) &&
     (!ft || r.type === ft)
   );
   
+  console.log('Found', matched.length, 'matches');
+  
   if (!matched.length) { 
-    el.innerHTML = '<div class="alert alert-warning" style="margin:0">ไม่พบรายการที่ตรงกับการค้นหา "<b>' + (q||'') + '</b>" (พบข้อมูล ' + allRecords.length + ' รายการ)</div>'; 
+    el.innerHTML = '<div class="alert alert-warning" style="margin:0">⚠️ ไม่พบรายการที่ตรงกับการค้นหา "<b>' + (q||'') + '</b>" (พบข้อมูล ' + allRecords.length + ' รายการ)</div>'; 
     return; 
   }
   
   el.innerHTML = `<div class="card"><div class="card-title"><span class="dot"></span>ผลการค้นหา (${matched.length} รายการ)</div>` +
     matched.map(r => `
-      <div class="record-item" onclick="selectRecord('${r.id}', '${r.name.replace(/'/g,"\\'")}', '${r.tin}', '${r.biz_type||''}')" style="cursor:pointer;margin-bottom:10px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:all .2s;hover:background:rgba(59,130,246,.1)">
+      <div class="record-item" onclick="selectRecord('${r.id}', '${r.name.replace(/'/g,"\\'")}', '${r.tin}', '${r.biz_type||''}')" style="cursor:pointer;margin-bottom:10px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:all .2s">
         <div style="font-weight:600;margin-bottom:4px">${r.name}</div>
         <div style="font-size:12px;color:var(--text-muted)">เลขผู้เสียภาษี: <b>${r.tin}</b> · ${r.type}</div>
       </div>`).join('') + '</div>';
